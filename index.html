@@ -33,7 +33,6 @@
   .mono{font-family:'IBM Plex Mono', monospace;}
   .display{font-family:'Archivo Black', sans-serif; text-transform:uppercase; letter-spacing:-0.01em;}
 
-  /* ---- top bar ---- */
   header.site{
     display:flex; align-items:center; justify-content:space-between;
     padding:22px 28px;
@@ -56,7 +55,6 @@
     letter-spacing:0.02em;
   }
 
-  /* ---- hero ---- */
   .hero{
     padding:72px 28px 56px; max-width:1180px; margin:0 auto;
     display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px; align-items:end;
@@ -81,7 +79,6 @@
   .hero-plate .display{font-size:15px; margin-bottom:10px;}
   .hero-plate .price{font-family:'Archivo Black'; font-size:34px; color:var(--stamp-red);}
 
-  /* ---- listado ---- */
   .listado{max-width:1180px; margin:0 auto; padding:20px 28px 90px;}
   .listado-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:22px; flex-wrap:wrap; gap:12px;}
   .listado-head h2{font-size:22px; margin:0;}
@@ -114,7 +111,6 @@
     padding:60px 20px; text-align:center; color:rgba(231,226,211,0.55); font-size:14px;
   }
 
-  /* ---- modal / ficha detalle ---- */
   .overlay{
     position:fixed; inset:0; background:rgba(10,12,14,0.72); z-index:100;
     display:none; align-items:flex-start; justify-content:center;
@@ -237,7 +233,6 @@
   Urquiza Cars — Av. Mitre 2877, Sarandí, Avellaneda · <a href="https://wa.me/5491100000000" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
 </footer>
 
-<!-- ---- modal ---- -->
 <div class="overlay" id="overlay">
   <div class="modal">
     <button class="modal-close" id="modal-close">✕</button>
@@ -255,8 +250,6 @@
 
         <div class="cuotometro">
           <div class="cuotometro-label"><span>Anticipo</span><b id="anticipo-valor"></b></div>
-          <input type="range" id="anticipo-slider" min="0" max="100" step="5">
-          <div class="cuotometro-min"><span id="anticipo-min-label"></span><span id="anticipo-pct"></span></div>
 
           <div class="plazo-select" id="plazo-select"></div>
 
@@ -279,58 +272,10 @@
   </div>
 </div>
 
-<!--
-  ============================================================
-  CONEXIÓN A FIREBASE — leer antes de publicar
-  ============================================================
-  Este sitio lee autos desde una colección de Firestore llamada
-  "publicStock" en el mismo proyecto Firebase que ya usás para
-  la app de gestión (urquiza-cars).
-
-  Por qué una colección aparte y no "stock" directamente:
-  la web es pública, así que solo debe exponer los campos que
-  un cliente puede ver (precio final, fotos, descripción).
-  Nunca el costo, la ganancia ni datos internos.
-
-  1) Pegá tu configuración de Firebase (Firebase console >
-     Configuración del proyecto > tus apps > SDK config) en
-     FIREBASE_CONFIG más abajo.
-
-  2) Reglas de seguridad de Firestore para "publicStock"
-     (lectura pública, escritura solo autenticada):
-
-     match /publicStock/{docId} {
-       allow read: if true;
-       allow write: if request.auth != null;
-     }
-
-  3) Estructura esperada de cada documento en "publicStock":
-     {
-       marca: "Volkswagen",
-       modelo: "Gol Trend",
-       anio: 2018,
-       km: 78000,
-       precioContado: 8500000,      // en pesos, número
-       anticipoMinimoPct: 30,       // % mínimo de anticipo, número
-       tasaMensual: 4.5,            // % de interés mensual, número
-       plazos: [6, 12, 18],         // cuotas disponibles
-       descripcion: "Único dueño, service oficial al día...",
-       fotos: ["https://...", "https://..."],
-       publicado: true              // solo se muestran los docs con true
-     }
-
-  4) Desde tu app de gestión interna, el flujo natural es:
-     agregar un botón "Publicar en la web" en la ficha de cada
-     auto que copie los campos públicos a "publicStock" (o marque
-     publicado:true si usás la misma colección con reglas de
-     campo). Si querés, lo armamos juntos en la próxima sesión.
-  ============================================================
--->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  // TODO: reemplazar con la config real del proyecto urquiza-cars
   const FIREBASE_CONFIG = {
     apiKey: "AIzaSyBmigziZqfhLeh2J8s3O8NwzUpukBb2QrQ",
     authDomain: "urquiza-cars.firebaseapp.com",
@@ -345,23 +290,25 @@
 
   let cars = [];
 
-  // ---- datos de muestra (se usan solo si Firebase no está configurado o falla) ----
   const SAMPLE_CARS = [
     {
       id:"sample-1", marca:"Volkswagen", modelo:"Gol Trend 1.6", anio:2018, km:78000,
-      precioContado:8500000, anticipoMinimoPct:30, tasaMensual:4.5, plazos:[6,12,18],
+      precioContado:8500000, anticipo:2500000,
+      cuotas:{12:520000, 18:365000, 24:290000},
       descripcion:"Único dueño, service oficial al día, aire y dirección asistida.",
       fotos:["https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&q=80"]
     },
     {
       id:"sample-2", marca:"Chevrolet", modelo:"Onix 1.4 LT", anio:2020, km:52000,
-      precioContado:11200000, anticipoMinimoPct:35, tasaMensual:4.2, plazos:[6,12,18,24],
+      precioContado:11200000, anticipo:3500000,
+      cuotas:{12:680000, 18:475000, 24:375000, 36:260000},
       descripcion:"Excelente estado general, cubiertas nuevas, GNC opcional.",
       fotos:["https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&q=80"]
     },
     {
       id:"sample-3", marca:"Ford", modelo:"EcoSport 1.5 Freestyle", anio:2019, km:64000,
-      precioContado:12800000, anticipoMinimoPct:30, tasaMensual:4.5, plazos:[12,18,24],
+      precioContado:12800000, anticipo:3800000,
+      cuotas:{18:540000, 24:425000, 36:295000},
       descripcion:"SUV compacta, ideal ciudad y ruta, service en agencia oficial.",
       fotos:["https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&q=80"]
     }
@@ -399,7 +346,8 @@
       return;
     }
     grid.innerHTML = cars.map(c => {
-      const cuotaEjemplo = calcularCuota(c, c.anticipoMinimoPct, c.plazos[0]);
+      const plazosDisponibles = Object.keys(c.cuotas||{}).map(Number).sort((a,b)=>a-b);
+      const cuotaMasBaja = plazosDisponibles.length ? c.cuotas[plazosDisponibles[plazosDisponibles.length-1]] : 0;
       return `
       <article class="ficha" data-id="${c.id}">
         <div class="foto-wrap">
@@ -408,10 +356,10 @@
         </div>
         <div class="body">
           <h3>${c.marca} ${c.modelo}</h3>
-          <div class="specs">${fmtKm.format(c.km)} km · ${c.plazos[0]} a ${c.plazos[c.plazos.length-1]} cuotas</div>
+          <div class="specs">${fmtKm.format(c.km)} km · hasta ${plazosDisponibles[plazosDisponibles.length-1]||''} cuotas</div>
           <div class="precio-row">
             <span class="precio">${fmt.format(c.precioContado)}</span>
-            <span class="cuota-hint">desde<br><b>${fmt.format(cuotaEjemplo)}</b>/mes</span>
+            <span class="cuota-hint">desde<br><b>${fmt.format(cuotaMasBaja)}</b>/mes</span>
           </div>
         </div>
       </article>`;
@@ -422,28 +370,20 @@
     });
   }
 
-  function calcularCuota(car, anticipoPct, plazoMeses){
-    const anticipoMonto = car.precioContado * (anticipoPct/100);
-    const financiado = car.precioContado - anticipoMonto;
-    const i = (car.tasaMensual||0)/100;
-    if(i === 0) return financiado / plazoMeses;
-    // cuota fija (sistema francés)
-    const cuota = financiado * (i * Math.pow(1+i, plazoMeses)) / (Math.pow(1+i, plazoMeses) - 1);
-    return cuota;
-  }
-
   let currentCar = null;
   let currentPlazo = null;
 
   function openModal(id){
     currentCar = cars.find(c => c.id === id);
     if(!currentCar) return;
-    currentPlazo = currentCar.plazos[0];
+    const plazosDisponibles = Object.keys(currentCar.cuotas||{}).map(Number).sort((a,b)=>a-b);
+    currentPlazo = plazosDisponibles[0];
 
     document.getElementById('modal-anio-km').textContent = `${currentCar.anio} · ${fmtKm.format(currentCar.km)} km`;
     document.getElementById('modal-title').textContent = `${currentCar.marca} ${currentCar.modelo}`;
     document.getElementById('modal-desc').textContent = currentCar.descripcion || '';
     document.getElementById('modal-precio-contado').textContent = fmt.format(currentCar.precioContado);
+    document.getElementById('anticipo-valor').textContent = fmt.format(currentCar.anticipo || 0);
 
     const fotos = currentCar.fotos && currentCar.fotos.length ? currentCar.fotos : [''];
     document.getElementById('main-photo').src = fotos[0];
@@ -457,13 +397,8 @@
       });
     });
 
-    const slider = document.getElementById('anticipo-slider');
-    slider.min = currentCar.anticipoMinimoPct;
-    slider.value = currentCar.anticipoMinimoPct;
-    document.getElementById('anticipo-min-label').textContent = `mínimo ${currentCar.anticipoMinimoPct}%`;
-
     const plazoWrap = document.getElementById('plazo-select');
-    plazoWrap.innerHTML = currentCar.plazos.map(p =>
+    plazoWrap.innerHTML = plazosDisponibles.map(p =>
       `<button class="plazo-btn ${p===currentPlazo?'active':''}" data-p="${p}">${p} cuotas</button>`).join('');
     plazoWrap.querySelectorAll('.plazo-btn').forEach(btn=>{
       btn.addEventListener('click', ()=>{
@@ -474,7 +409,6 @@
       });
     });
 
-    slider.oninput = updateCuota;
     updateCuota();
 
     const cta = document.getElementById('contact-cta');
@@ -484,14 +418,9 @@
   }
 
   function updateCuota(){
-    const slider = document.getElementById('anticipo-slider');
-    const pct = parseInt(slider.value);
-    const anticipoMonto = currentCar.precioContado * (pct/100);
-    const financiado = currentCar.precioContado - anticipoMonto;
-    const cuota = calcularCuota(currentCar, pct, currentPlazo);
+    const financiado = currentCar.precioContado - (currentCar.anticipo || 0);
+    const cuota = (currentCar.cuotas && currentCar.cuotas[currentPlazo]) || 0;
 
-    document.getElementById('anticipo-valor').textContent = fmt.format(anticipoMonto);
-    document.getElementById('anticipo-pct').textContent = pct + '%';
     document.getElementById('cuota-monto').textContent = fmt.format(cuota);
     document.getElementById('monto-financiado').textContent = fmt.format(financiado);
   }
