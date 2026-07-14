@@ -191,7 +191,7 @@
   <nav class="site-nav" style="display:flex; align-items:center;">
     <a href="#stock">Stock</a>
     <a href="#ubicacion">Ubicación</a>
-    <a class="whatsapp-btn" href="https://wa.me/5491100000000" target="_blank" rel="noopener">WhatsApp</a>
+    <a class="whatsapp-btn" href="https://wa.me/5491168849847" target="_blank" rel="noopener">WhatsApp</a>
   </nav>
 </header>
 
@@ -230,7 +230,7 @@
 </section>
 
 <footer>
-  Urquiza Cars — Av. Mitre 2877, Sarandí, Avellaneda · <a href="https://wa.me/5491100000000" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
+  Urquiza Cars — Av. Mitre 2877, Sarandí, Avellaneda · <a href="https://wa.me/5491168849847" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
 </footer>
 
 <div class="overlay" id="overlay">
@@ -246,10 +246,19 @@
         <h2 id="modal-title"></h2>
         <p class="desc" id="modal-desc"></p>
 
-        <div class="stamp"><small>Precio contado</small><span id="modal-precio-contado"></span></div>
+        <div style="display:flex; gap:14px; flex-wrap:wrap; margin-bottom:18px;">
+          <div>
+            <div class="stamp"><small>Precio efectivo</small><span id="modal-precio-efectivo"></span></div>
+            <div style="font-size:11.5px; color:var(--ink-soft);">Anticipo: <b class="mono" id="anticipo-efectivo-valor"></b></div>
+          </div>
+          <div>
+            <div class="stamp" style="border-color:var(--ink); color:var(--ink);"><small style="color:var(--ink);">Precio lista</small><span id="modal-precio-lista"></span></div>
+            <div style="font-size:11.5px; color:var(--ink-soft);">Anticipo: <b class="mono" id="anticipo-lista-valor"></b></div>
+          </div>
+        </div>
 
         <div class="cuotometro">
-          <div class="cuotometro-label"><span>Anticipo</span><b id="anticipo-valor"></b></div>
+          <div class="cuotometro-label"><span>Financiando a</span><span style="font-size:11px;color:var(--ink-soft)">precio de lista</span></div>
 
           <div class="plazo-select" id="plazo-select"></div>
 
@@ -293,21 +302,24 @@
   const SAMPLE_CARS = [
     {
       id:"sample-1", marca:"Volkswagen", modelo:"Gol Trend 1.6", anio:2018, km:78000,
-      precioContado:8500000, anticipo:2500000,
+      precioEfectivo:8200000, anticipoEfectivo:2000000,
+      precioLista:8900000, anticipoLista:2500000,
       cuotas:{12:520000, 18:365000, 24:290000},
       descripcion:"Único dueño, service oficial al día, aire y dirección asistida.",
       fotos:["https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&q=80"]
     },
     {
       id:"sample-2", marca:"Chevrolet", modelo:"Onix 1.4 LT", anio:2020, km:52000,
-      precioContado:11200000, anticipo:3500000,
+      precioEfectivo:10800000, anticipoEfectivo:2800000,
+      precioLista:11700000, anticipoLista:3500000,
       cuotas:{12:680000, 18:475000, 24:375000, 36:260000},
       descripcion:"Excelente estado general, cubiertas nuevas, GNC opcional.",
       fotos:["https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&q=80"]
     },
     {
       id:"sample-3", marca:"Ford", modelo:"EcoSport 1.5 Freestyle", anio:2019, km:64000,
-      precioContado:12800000, anticipo:3800000,
+      precioEfectivo:12300000, anticipoEfectivo:3200000,
+      precioLista:13400000, anticipoLista:3800000,
       cuotas:{18:540000, 24:425000, 36:295000},
       descripcion:"SUV compacta, ideal ciudad y ruta, service en agencia oficial.",
       fotos:["https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&q=80"]
@@ -358,7 +370,10 @@
           <h3>${c.marca} ${c.modelo}</h3>
           <div class="specs">${fmtKm.format(c.km)} km · hasta ${plazosDisponibles[plazosDisponibles.length-1]||''} cuotas</div>
           <div class="precio-row">
-            <span class="precio">${fmt.format(c.precioContado)}</span>
+            <div>
+              <span class="precio">${fmt.format(c.precioEfectivo)}</span>
+              <div style="font-size:10.5px;color:var(--ink-soft);margin-top:2px">contado · lista ${fmt.format(c.precioLista)}</div>
+            </div>
             <span class="cuota-hint">desde<br><b>${fmt.format(cuotaMasBaja)}</b>/mes</span>
           </div>
         </div>
@@ -382,8 +397,10 @@
     document.getElementById('modal-anio-km').textContent = `${currentCar.anio} · ${fmtKm.format(currentCar.km)} km`;
     document.getElementById('modal-title').textContent = `${currentCar.marca} ${currentCar.modelo}`;
     document.getElementById('modal-desc').textContent = currentCar.descripcion || '';
-    document.getElementById('modal-precio-contado').textContent = fmt.format(currentCar.precioContado);
-    document.getElementById('anticipo-valor').textContent = fmt.format(currentCar.anticipo || 0);
+    document.getElementById('modal-precio-efectivo').textContent = fmt.format(currentCar.precioEfectivo);
+    document.getElementById('modal-precio-lista').textContent = fmt.format(currentCar.precioLista);
+    document.getElementById('anticipo-efectivo-valor').textContent = fmt.format(currentCar.anticipoEfectivo || 0);
+    document.getElementById('anticipo-lista-valor').textContent = fmt.format(currentCar.anticipoLista || 0);
 
     const fotos = currentCar.fotos && currentCar.fotos.length ? currentCar.fotos : [''];
     document.getElementById('main-photo').src = fotos[0];
@@ -412,13 +429,13 @@
     updateCuota();
 
     const cta = document.getElementById('contact-cta');
-    cta.href = `https://wa.me/5491100000000?text=${encodeURIComponent('Hola! Te consulto por el '+currentCar.marca+' '+currentCar.modelo+' '+currentCar.anio)}`;
+    cta.href = `https://wa.me/5491168849847?text=${encodeURIComponent('Hola! Te consulto por el '+currentCar.marca+' '+currentCar.modelo+' '+currentCar.anio)}`;
 
     document.getElementById('overlay').classList.add('open');
   }
 
   function updateCuota(){
-    const financiado = currentCar.precioContado - (currentCar.anticipo || 0);
+    const financiado = currentCar.precioLista - (currentCar.anticipoLista || 0);
     const cuota = (currentCar.cuotas && currentCar.cuotas[currentPlazo]) || 0;
 
     document.getElementById('cuota-monto').textContent = fmt.format(cuota);
