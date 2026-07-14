@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Urquiza Cars — Autos usados en Sarandí, Avellaneda</title>
+<meta name="description" content="Autos usados en Sarandí, Avellaneda. Precio contado, anticipo y cuotas fijas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --asphalt: #14181C;
+    --asphalt-2: #1D2227;
+    --paper: #E7E2D3;
+    --paper-2: #F1EDE0;
+    --ink: #14181C;
+    --ink-soft: #4B5157;
+    --stamp-red: #C4432B;
+    --dealer-yellow: #D9A441;
+    --line: rgba(20,24,28,0.14);
+    --line-dark: rgba(231,226,211,0.16);
+    --radius: 2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--asphalt);
+    color:var(--paper);
+    font-family:'Work Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  .display{font-family:'Archivo Black', sans-serif; text-transform:uppercase; letter-spacing:-0.01em;}
+
+  /* ---- top bar ---- */
+  header.site{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 28px;
+    border-bottom:1px solid var(--line-dark);
+    position:sticky; top:0; z-index:50;
+    background:rgba(20,24,28,0.92);
+    backdrop-filter:blur(6px);
+  }
+  .brand{display:flex; align-items:baseline; gap:10px;}
+  .brand .display{font-size:22px; color:var(--paper);}
+  .brand .tag{font-size:11px; letter-spacing:0.12em; color:var(--dealer-yellow); text-transform:uppercase;}
+  .site-nav a{
+    color:var(--paper); text-decoration:none; font-size:14px; margin-left:26px;
+    opacity:0.75; transition:opacity .15s;
+  }
+  .site-nav a:hover{opacity:1;}
+  .whatsapp-btn{
+    background:var(--dealer-yellow); color:var(--asphalt); font-weight:700;
+    padding:9px 16px; border-radius:var(--radius); text-decoration:none; font-size:13px;
+    letter-spacing:0.02em;
+  }
+
+  /* ---- hero ---- */
+  .hero{
+    padding:72px 28px 56px; max-width:1180px; margin:0 auto;
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px; align-items:end;
+  }
+  .hero h1{
+    font-size:clamp(38px,5vw,64px); line-height:0.96; margin:0 0 18px;
+  }
+  .hero h1 .accent{color:var(--stamp-red);}
+  .hero p{max-width:44ch; color:rgba(231,226,211,0.72); font-size:16px; line-height:1.55; margin:0 0 26px;}
+  .hero-stats{display:flex; gap:28px;}
+  .hero-stats .stat{border-left:2px solid var(--dealer-yellow); padding-left:12px;}
+  .hero-stats .stat b{display:block; font-family:'Archivo Black'; font-size:26px;}
+  .hero-stats .stat span{font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:rgba(231,226,211,0.55);}
+
+  .hero-plate{
+    justify-self:end; background:var(--paper); color:var(--ink);
+    padding:20px 22px; transform:rotate(-2deg);
+    box-shadow:0 18px 40px rgba(0,0,0,0.35);
+    border:2px solid var(--ink);
+  }
+  .hero-plate .mono{font-size:12px; letter-spacing:.08em; color:var(--ink-soft); display:block; margin-bottom:6px;}
+  .hero-plate .display{font-size:15px; margin-bottom:10px;}
+  .hero-plate .price{font-family:'Archivo Black'; font-size:34px; color:var(--stamp-red);}
+
+  /* ---- listado ---- */
+  .listado{max-width:1180px; margin:0 auto; padding:20px 28px 90px;}
+  .listado-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:22px; flex-wrap:wrap; gap:12px;}
+  .listado-head h2{font-size:22px; margin:0;}
+  .filtro-count{font-size:13px; color:rgba(231,226,211,0.5);}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:22px;}
+
+  .ficha{
+    background:var(--paper); color:var(--ink);
+    position:relative; cursor:pointer;
+    border:1px solid var(--line);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .ficha:hover{transform:translateY(-4px); box-shadow:0 16px 30px rgba(0,0,0,0.32);}
+  .ficha .foto-wrap{position:relative; aspect-ratio:4/3; overflow:hidden; background:#0002;}
+  .ficha .foto-wrap img{width:100%; height:100%; object-fit:cover; display:block;}
+  .ficha .anio-badge{
+    position:absolute; top:10px; left:10px; background:var(--asphalt); color:var(--paper);
+    font-family:'IBM Plex Mono'; font-size:12px; padding:4px 8px; letter-spacing:.04em;
+  }
+  .ficha .body{padding:16px 16px 18px;}
+  .ficha h3{margin:0 0 4px; font-size:18px; font-weight:700;}
+  .ficha .specs{font-family:'IBM Plex Mono'; font-size:11.5px; color:var(--ink-soft); margin-bottom:14px;}
+  .ficha .precio-row{display:flex; align-items:flex-end; justify-content:space-between;}
+  .ficha .precio{font-family:'Archivo Black'; font-size:22px; transform:rotate(-2deg); color:var(--stamp-red); white-space:nowrap;}
+  .ficha .cuota-hint{font-size:11px; color:var(--ink-soft); text-align:right; line-height:1.3;}
+  .ficha .cuota-hint b{color:var(--ink); font-family:'IBM Plex Mono'; font-size:13px;}
+
+  .empty-state, .loading-state{
+    padding:60px 20px; text-align:center; color:rgba(231,226,211,0.55); font-size:14px;
+  }
+
+  /* ---- modal / ficha detalle ---- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(10,12,14,0.72); z-index:100;
+    display:none; align-items:flex-start; justify-content:center;
+    padding:40px 16px; overflow-y:auto;
+  }
+  .overlay.open{display:flex;}
+  .modal{
+    background:var(--paper); color:var(--ink); max-width:920px; width:100%;
+    box-shadow:0 30px 70px rgba(0,0,0,0.5);
+  }
+  .modal-close{
+    position:absolute; top:14px; right:14px; background:var(--asphalt); color:var(--paper);
+    border:none; width:34px; height:34px; font-size:16px; cursor:pointer;
+  }
+  .modal-inner{position:relative; display:grid; grid-template-columns:1fr 1fr;}
+  @media(max-width:760px){.modal-inner{grid-template-columns:1fr;}}
+
+  .modal-gallery{background:var(--asphalt-2);}
+  .modal-gallery .main-photo{width:100%; aspect-ratio:4/3; object-fit:cover; display:block;}
+  .thumb-row{display:flex; gap:6px; padding:8px;}
+  .thumb-row img{width:56px; height:42px; object-fit:cover; cursor:pointer; opacity:.55; border:1px solid transparent;}
+  .thumb-row img.active{opacity:1; border-color:var(--dealer-yellow);}
+
+  .modal-info{padding:26px 26px 30px;}
+  .modal-info .mono{font-size:11px; color:var(--ink-soft); letter-spacing:.08em;}
+  .modal-info h2{margin:4px 0 12px; font-size:26px;}
+  .modal-info .desc{font-size:13.5px; color:var(--ink-soft); line-height:1.55; margin-bottom:20px;}
+
+  .stamp{
+    display:inline-block; border:3px solid var(--stamp-red); color:var(--stamp-red);
+    padding:6px 12px; transform:rotate(-3deg); font-family:'Archivo Black'; font-size:24px;
+    margin-bottom:18px;
+  }
+  .stamp small{display:block; font-family:'IBM Plex Mono'; font-size:10px; letter-spacing:.1em; color:var(--stamp-red); transform:none;}
+
+  .cuotometro{border-top:1px dashed var(--line); padding-top:18px;}
+  .cuotometro-label{display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;}
+  .cuotometro-label b{font-family:'IBM Plex Mono'; font-size:14px;}
+  input[type=range]{
+    width:100%; accent-color:var(--stamp-red); margin-bottom:6px;
+  }
+  .cuotometro-min{font-size:10.5px; color:var(--ink-soft); display:flex; justify-content:space-between; margin-bottom:16px;}
+
+  .plazo-select{display:flex; gap:6px; margin-bottom:18px; flex-wrap:wrap;}
+  .plazo-btn{
+    font-family:'IBM Plex Mono'; font-size:12px; padding:6px 10px; border:1px solid var(--ink);
+    background:transparent; cursor:pointer; color:var(--ink);
+  }
+  .plazo-btn.active{background:var(--ink); color:var(--paper);}
+
+  .resultado{
+    background:var(--ink); color:var(--paper); padding:16px 18px;
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;
+  }
+  .resultado .cuota-num{font-family:'Archivo Black'; font-size:30px; color:var(--dealer-yellow);}
+  .resultado .cuota-label{font-size:11px; text-transform:uppercase; letter-spacing:.06em; opacity:.75;}
+
+  .contact-cta{
+    display:block; text-align:center; background:var(--dealer-yellow); color:var(--asphalt);
+    text-decoration:none; font-weight:700; padding:12px; font-size:14px;
+  }
+  .fine-print{font-size:10px; color:var(--ink-soft); margin-top:10px; line-height:1.4;}
+
+  footer{
+    border-top:1px solid var(--line-dark); padding:30px 28px; text-align:center;
+    color:rgba(231,226,211,0.5); font-size:12px;
+  }
+  footer a{color:var(--dealer-yellow);}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="brand">
+    <span class="display">Urquiza Cars</span>
+    <span class="tag">· Sarandí</span>
+  </div>
+  <nav class="site-nav" style="display:flex; align-items:center;">
+    <a href="#stock">Stock</a>
+    <a href="#ubicacion">Ubicación</a>
+    <a class="whatsapp-btn" href="https://wa.me/5491100000000" target="_blank" rel="noopener">WhatsApp</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div>
+    <h1>Tu próximo auto<br>usado, en <span class="accent">cuotas fijas</span><br>en pesos.</h1>
+    <p>Accedé al crédito. Cada auto con precio contado, anticipo y cuota fija — sin letra chica.</p>
+    <div class="hero-stats">
+      <div class="stat"><b id="stat-count">—</b><span>Autos en stock</span></div>
+      <div class="stat"><b>+5 años</b><span>En el mercado</span></div>
+      <div class="stat"><b>Sarandí</b><span>Avellaneda</span></div>
+    </div>
+  </div>
+  <div class="hero-plate">
+    <span class="mono">FICHA DE VENTA</span>
+    <span class="display">Precio final, sin sorpresas</span>
+    <span class="price">Contado + cuotas</span>
+  </div>
+</section>
+
+<section class="listado" id="stock">
+  <div class="listado-head">
+    <h2 class="display" style="font-size:20px;">Stock disponible</h2>
+    <span class="filtro-count" id="count-label"></span>
+  </div>
+  <div id="grid" class="grid">
+    <div class="loading-state">Cargando stock…</div>
+  </div>
+</section>
+
+<section id="ubicacion" class="listado" style="padding-top:0;">
+  <div class="listado-head"><h2 class="display" style="font-size:20px;">Dónde estamos</h2></div>
+  <p style="color:rgba(231,226,211,0.72); font-size:14px; max-width:52ch;">
+    Av. Mitre 2877, Sarandí, Avellaneda, Buenos Aires. Visitanos para ver el stock en persona o coordiná por WhatsApp.
+  </p>
+</section>
+
+<footer>
+  Urquiza Cars — Av. Mitre 2877, Sarandí, Avellaneda · <a href="https://wa.me/5491100000000" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
+</footer>
+
+<!-- ---- modal ---- -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <button class="modal-close" id="modal-close">✕</button>
+    <div class="modal-inner">
+      <div class="modal-gallery">
+        <img class="main-photo" id="main-photo" src="" alt="">
+        <div class="thumb-row" id="thumb-row"></div>
+      </div>
+      <div class="modal-info">
+        <span class="mono" id="modal-anio-km"></span>
+        <h2 id="modal-title"></h2>
+        <p class="desc" id="modal-desc"></p>
+
+        <div class="stamp"><small>Precio contado</small><span id="modal-precio-contado"></span></div>
+
+        <div class="cuotometro">
+          <div class="cuotometro-label"><span>Anticipo</span><b id="anticipo-valor"></b></div>
+          <input type="range" id="anticipo-slider" min="0" max="100" step="5">
+          <div class="cuotometro-min"><span id="anticipo-min-label"></span><span id="anticipo-pct"></span></div>
+
+          <div class="plazo-select" id="plazo-select"></div>
+
+          <div class="resultado">
+            <div>
+              <div class="cuota-label">Cuota fija</div>
+              <div class="cuota-num" id="cuota-monto">—</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="cuota-label">Financiás</div>
+              <div class="mono" id="monto-financiado" style="font-size:15px;">—</div>
+            </div>
+          </div>
+
+          <a class="contact-cta" id="contact-cta" href="#" target="_blank" rel="noopener">Consultar por este auto</a>
+          <p class="fine-print">Cálculo estimativo, sujeto a evaluación crediticia y verificación de la unidad. Tasa e importes finales se confirman en el local.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--
+  ============================================================
+  CONEXIÓN A FIREBASE — leer antes de publicar
+  ============================================================
+  Este sitio lee autos desde una colección de Firestore llamada
+  "publicStock" en el mismo proyecto Firebase que ya usás para
+  la app de gestión (urquiza-cars).
+
+  Por qué una colección aparte y no "stock" directamente:
+  la web es pública, así que solo debe exponer los campos que
+  un cliente puede ver (precio final, fotos, descripción).
+  Nunca el costo, la ganancia ni datos internos.
+
+  1) Pegá tu configuración de Firebase (Firebase console >
+     Configuración del proyecto > tus apps > SDK config) en
+     FIREBASE_CONFIG más abajo.
+
+  2) Reglas de seguridad de Firestore para "publicStock"
+     (lectura pública, escritura solo autenticada):
+
+     match /publicStock/{docId} {
+       allow read: if true;
+       allow write: if request.auth != null;
+     }
+
+  3) Estructura esperada de cada documento en "publicStock":
+     {
+       marca: "Volkswagen",
+       modelo: "Gol Trend",
+       anio: 2018,
+       km: 78000,
+       precioContado: 8500000,      // en pesos, número
+       anticipoMinimoPct: 30,       // % mínimo de anticipo, número
+       tasaMensual: 4.5,            // % de interés mensual, número
+       plazos: [6, 12, 18],         // cuotas disponibles
+       descripcion: "Único dueño, service oficial al día...",
+       fotos: ["https://...", "https://..."],
+       publicado: true              // solo se muestran los docs con true
+     }
+
+  4) Desde tu app de gestión interna, el flujo natural es:
+     agregar un botón "Publicar en la web" en la ficha de cada
+     auto que copie los campos públicos a "publicStock" (o marque
+     publicado:true si usás la misma colección con reglas de
+     campo). Si querés, lo armamos juntos en la próxima sesión.
+  ============================================================
+-->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // TODO: reemplazar con la config real del proyecto urquiza-cars
+  const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyBmigziZqfhLeh2J8s3O8NwzUpukBb2QrQ",
+    authDomain: "urquiza-cars.firebaseapp.com",
+    projectId: "urquiza-cars",
+    storageBucket: "urquiza-cars.firebasestorage.app",
+    messagingSenderId: "1042954106942",
+    appId: "1:1042954106942:web:ca1b3a3ed7fdbb3327396f"
+  };
+
+  const fmt = new Intl.NumberFormat('es-AR', { style:'currency', currency:'ARS', maximumFractionDigits:0 });
+  const fmtKm = new Intl.NumberFormat('es-AR');
+
+  let cars = [];
+
+  // ---- datos de muestra (se usan solo si Firebase no está configurado o falla) ----
+  const SAMPLE_CARS = [
+    {
+      id:"sample-1", marca:"Volkswagen", modelo:"Gol Trend 1.6", anio:2018, km:78000,
+      precioContado:8500000, anticipoMinimoPct:30, tasaMensual:4.5, plazos:[6,12,18],
+      descripcion:"Único dueño, service oficial al día, aire y dirección asistida.",
+      fotos:["https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&q=80"]
+    },
+    {
+      id:"sample-2", marca:"Chevrolet", modelo:"Onix 1.4 LT", anio:2020, km:52000,
+      precioContado:11200000, anticipoMinimoPct:35, tasaMensual:4.2, plazos:[6,12,18,24],
+      descripcion:"Excelente estado general, cubiertas nuevas, GNC opcional.",
+      fotos:["https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&q=80"]
+    },
+    {
+      id:"sample-3", marca:"Ford", modelo:"EcoSport 1.5 Freestyle", anio:2019, km:64000,
+      precioContado:12800000, anticipoMinimoPct:30, tasaMensual:4.5, plazos:[12,18,24],
+      descripcion:"SUV compacta, ideal ciudad y ruta, service en agencia oficial.",
+      fotos:["https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&q=80"]
+    }
+  ];
+
+  async function loadCars(){
+    try{
+      const app = initializeApp(FIREBASE_CONFIG);
+      const db = getFirestore(app);
+      const q = query(collection(db, "publicStock"), where("publicado", "==", true));
+      const snap = await getDocs(q);
+      if(snap.empty){ cars = SAMPLE_CARS; markSample(); }
+      else { cars = snap.docs.map(d => ({ id:d.id, ...d.data() })); }
+    }catch(err){
+      console.warn("No se pudo conectar a Firebase, mostrando datos de muestra:", err.message);
+      cars = SAMPLE_CARS;
+      markSample();
+    }
+    renderGrid();
+  }
+
+  function markSample(){
+    const head = document.getElementById('count-label');
+    head.textContent = "⚠ mostrando datos de muestra — conectá Firebase para ver tu stock real";
+  }
+
+  function renderGrid(){
+    const grid = document.getElementById('grid');
+    document.getElementById('stat-count').textContent = cars.length;
+    if(!document.getElementById('count-label').textContent){
+      document.getElementById('count-label').textContent = cars.length + " autos";
+    }
+    if(cars.length === 0){
+      grid.innerHTML = '<div class="empty-state">No hay autos publicados por el momento.</div>';
+      return;
+    }
+    grid.innerHTML = cars.map(c => {
+      const cuotaEjemplo = calcularCuota(c, c.anticipoMinimoPct, c.plazos[0]);
+      return `
+      <article class="ficha" data-id="${c.id}">
+        <div class="foto-wrap">
+          <span class="anio-badge">${c.anio}</span>
+          <img src="${(c.fotos&&c.fotos[0])||''}" alt="${c.marca} ${c.modelo}" loading="lazy">
+        </div>
+        <div class="body">
+          <h3>${c.marca} ${c.modelo}</h3>
+          <div class="specs">${fmtKm.format(c.km)} km · ${c.plazos[0]} a ${c.plazos[c.plazos.length-1]} cuotas</div>
+          <div class="precio-row">
+            <span class="precio">${fmt.format(c.precioContado)}</span>
+            <span class="cuota-hint">desde<br><b>${fmt.format(cuotaEjemplo)}</b>/mes</span>
+          </div>
+        </div>
+      </article>`;
+    }).join('');
+
+    grid.querySelectorAll('.ficha').forEach(el=>{
+      el.addEventListener('click', ()=> openModal(el.dataset.id));
+    });
+  }
+
+  function calcularCuota(car, anticipoPct, plazoMeses){
+    const anticipoMonto = car.precioContado * (anticipoPct/100);
+    const financiado = car.precioContado - anticipoMonto;
+    const i = (car.tasaMensual||0)/100;
+    if(i === 0) return financiado / plazoMeses;
+    // cuota fija (sistema francés)
+    const cuota = financiado * (i * Math.pow(1+i, plazoMeses)) / (Math.pow(1+i, plazoMeses) - 1);
+    return cuota;
+  }
+
+  let currentCar = null;
+  let currentPlazo = null;
+
+  function openModal(id){
+    currentCar = cars.find(c => c.id === id);
+    if(!currentCar) return;
+    currentPlazo = currentCar.plazos[0];
+
+    document.getElementById('modal-anio-km').textContent = `${currentCar.anio} · ${fmtKm.format(currentCar.km)} km`;
+    document.getElementById('modal-title').textContent = `${currentCar.marca} ${currentCar.modelo}`;
+    document.getElementById('modal-desc').textContent = currentCar.descripcion || '';
+    document.getElementById('modal-precio-contado').textContent = fmt.format(currentCar.precioContado);
+
+    const fotos = currentCar.fotos && currentCar.fotos.length ? currentCar.fotos : [''];
+    document.getElementById('main-photo').src = fotos[0];
+    document.getElementById('thumb-row').innerHTML = fotos.map((f,i)=>
+      `<img src="${f}" class="${i===0?'active':''}" data-i="${i}">`).join('');
+    document.querySelectorAll('#thumb-row img').forEach(img=>{
+      img.addEventListener('click', ()=>{
+        document.getElementById('main-photo').src = img.src;
+        document.querySelectorAll('#thumb-row img').forEach(t=>t.classList.remove('active'));
+        img.classList.add('active');
+      });
+    });
+
+    const slider = document.getElementById('anticipo-slider');
+    slider.min = currentCar.anticipoMinimoPct;
+    slider.value = currentCar.anticipoMinimoPct;
+    document.getElementById('anticipo-min-label').textContent = `mínimo ${currentCar.anticipoMinimoPct}%`;
+
+    const plazoWrap = document.getElementById('plazo-select');
+    plazoWrap.innerHTML = currentCar.plazos.map(p =>
+      `<button class="plazo-btn ${p===currentPlazo?'active':''}" data-p="${p}">${p} cuotas</button>`).join('');
+    plazoWrap.querySelectorAll('.plazo-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        currentPlazo = parseInt(btn.dataset.p);
+        plazoWrap.querySelectorAll('.plazo-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        updateCuota();
+      });
+    });
+
+    slider.oninput = updateCuota;
+    updateCuota();
+
+    const cta = document.getElementById('contact-cta');
+    cta.href = `https://wa.me/5491100000000?text=${encodeURIComponent('Hola! Te consulto por el '+currentCar.marca+' '+currentCar.modelo+' '+currentCar.anio)}`;
+
+    document.getElementById('overlay').classList.add('open');
+  }
+
+  function updateCuota(){
+    const slider = document.getElementById('anticipo-slider');
+    const pct = parseInt(slider.value);
+    const anticipoMonto = currentCar.precioContado * (pct/100);
+    const financiado = currentCar.precioContado - anticipoMonto;
+    const cuota = calcularCuota(currentCar, pct, currentPlazo);
+
+    document.getElementById('anticipo-valor').textContent = fmt.format(anticipoMonto);
+    document.getElementById('anticipo-pct').textContent = pct + '%';
+    document.getElementById('cuota-monto').textContent = fmt.format(cuota);
+    document.getElementById('monto-financiado').textContent = fmt.format(financiado);
+  }
+
+  document.getElementById('modal-close').addEventListener('click', ()=>{
+    document.getElementById('overlay').classList.remove('open');
+  });
+  document.getElementById('overlay').addEventListener('click', (e)=>{
+    if(e.target.id === 'overlay') document.getElementById('overlay').classList.remove('open');
+  });
+
+  loadCars();
+</script>
+
+</body>
+</html>
