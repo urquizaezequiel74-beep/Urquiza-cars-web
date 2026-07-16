@@ -627,6 +627,16 @@
 
       await addDoc(collection(db, 'solicitudes'), data);
 
+      const tipoLabel = tipo === 'vender' ? 'VENDER' : 'CONSIGNAR';
+      const precioLinea = tipo === 'consignar' ? `\nPrecio deseado: ${data.precioDeseado}` : '';
+      await addDoc(collection(db, 'mail'), {
+        to: ['urquizaezequiel74@gmail.com'],
+        message: {
+          subject: `Nueva solicitud para ${tipoLabel}: ${marca} ${modelo}`,
+          text: `Tipo: ${tipoLabel}\nNombre: ${nombre}\nTeléfono: ${telefono}\nAuto: ${marca} ${modelo} ${anio}\nKm: ${km}${precioLinea}\nDescripción: ${descripcion}\n\nFotos:\n${fotos.join('\n')}`
+        }
+      });
+
       statusEl.textContent = '¡Listo! Recibimos tus datos, te contactamos pronto.';
       statusEl.className = 'form-status ok';
       document.getElementById('form-'+tipo).reset();
