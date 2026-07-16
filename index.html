@@ -213,6 +213,38 @@
   .acciones{max-width:1180px; margin:0 auto; padding:36px 28px 0;}
   .acciones-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
   @media(max-width:760px){.acciones-grid{grid-template-columns:1fr;}}
+
+  @media(max-width:600px){
+    header.site{padding:14px 16px; flex-wrap:wrap; gap:10px;}
+    .brand .display{font-size:18px;}
+    .site-nav{gap:0; flex-wrap:wrap; justify-content:flex-end; row-gap:6px;}
+    .site-nav a{margin-left:14px; font-size:13px;}
+    .whatsapp-btn{padding:7px 12px; font-size:12px;}
+
+    .hero{grid-template-columns:1fr; padding:32px 16px 36px; gap:24px;}
+    .hero h1{font-size:34px;}
+    .hero-plate{justify-self:stretch; transform:none;}
+
+    .acciones{padding:24px 16px 0;}
+    .listado{padding:16px 16px 60px;}
+
+    .grid{grid-template-columns:1fr 1fr; gap:12px;}
+    .ficha h3{font-size:15px;}
+    .ficha .precio{font-size:18px;}
+
+    .modal{max-width:100%; margin:0 8px;}
+    .modal-info{padding:20px 18px 24px;}
+    .precios-compare{gap:14px;}
+    .stamp{font-size:18px; padding:5px 9px;}
+
+    .mapa-wrap iframe{height:220px;}
+    .clientes-carousel{max-width:100%;}
+
+    .form-row{grid-template-columns:1fr;}
+  }
+  @media(max-width:380px){
+    .grid{grid-template-columns:1fr;}
+  }
   .accion-card{
     background:var(--paper); color:var(--ink); padding:22px 20px; cursor:pointer;
     border:1px solid var(--line); transition:transform .15s ease, box-shadow .15s ease;
