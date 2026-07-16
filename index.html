@@ -9,16 +9,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --asphalt: #14181C;
-    --asphalt-2: #1D2227;
-    --paper: #E7E2D3;
-    --paper-2: #F1EDE0;
-    --ink: #14181C;
-    --ink-soft: #4B5157;
-    --stamp-red: #C4432B;
-    --dealer-yellow: #D9A441;
-    --line: rgba(20,24,28,0.14);
-    --line-dark: rgba(231,226,211,0.16);
+    --asphalt: #0D0D0D;
+    --asphalt-2: #1A1A1A;
+    --paper: #F4F1E8;
+    --paper-2: #EAE5D6;
+    --ink: #0D0D0D;
+    --ink-soft: #4A4A45;
+    --stamp-red: #0D0D0D;
+    --dealer-yellow: #F2B705;
+    --line: rgba(13,13,13,0.14);
+    --line-dark: rgba(242,183,5,0.16);
     --radius: 2px;
   }
   *{box-sizing:border-box;}
@@ -62,7 +62,7 @@
   .hero h1{
     font-size:clamp(38px,5vw,64px); line-height:0.96; margin:0 0 18px;
   }
-  .hero h1 .accent{color:var(--stamp-red);}
+  .hero h1 .accent{color:var(--dealer-yellow);}
   .hero p{max-width:44ch; color:rgba(231,226,211,0.72); font-size:16px; line-height:1.55; margin:0 0 26px;}
   .hero-stats{display:flex; gap:28px;}
   .hero-stats .stat{border-left:2px solid var(--dealer-yellow); padding-left:12px;}
@@ -77,7 +77,7 @@
   }
   .hero-plate .mono{font-size:12px; letter-spacing:.08em; color:var(--ink-soft); display:block; margin-bottom:6px;}
   .hero-plate .display{font-size:15px; margin-bottom:10px;}
-  .hero-plate .price{font-family:'Archivo Black'; font-size:34px; color:var(--stamp-red);}
+  .hero-plate .price{font-family:'Archivo Black'; font-size:34px; color:var(--ink);}
 
   .listado{max-width:1180px; margin:0 auto; padding:20px 28px 90px;}
   .listado-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:22px; flex-wrap:wrap; gap:12px;}
@@ -103,7 +103,7 @@
   .ficha h3{margin:0 0 4px; font-size:18px; font-weight:700;}
   .ficha .specs{font-family:'IBM Plex Mono'; font-size:11.5px; color:var(--ink-soft); margin-bottom:14px;}
   .ficha .precio-row{display:flex; align-items:flex-end; justify-content:space-between;}
-  .ficha .precio{font-family:'Archivo Black'; font-size:22px; transform:rotate(-2deg); color:var(--stamp-red); white-space:nowrap;}
+  .ficha .precio{font-family:'Archivo Black'; font-size:22px; transform:rotate(-2deg); color:var(--ink); white-space:nowrap;}
   .ficha .cuota-hint{font-size:11px; color:var(--ink-soft); text-align:right; line-height:1.3;}
   .ficha .cuota-hint b{color:var(--ink); font-family:'IBM Plex Mono'; font-size:13px;}
 
@@ -131,7 +131,7 @@
   .modal-gallery .main-photo{width:100%; max-width:380px; aspect-ratio:4/3; object-fit:cover; display:block; border-radius:4px; box-shadow:0 8px 20px rgba(0,0,0,0.18);}
   .thumb-row{display:flex; gap:6px; padding:12px 0; justify-content:center; flex-wrap:wrap;}
   .thumb-row img{width:52px; height:39px; object-fit:cover; cursor:pointer; opacity:.5; border:1px solid transparent; border-radius:2px;}
-  .thumb-row img.active{opacity:1; border-color:var(--stamp-red);}
+  .thumb-row img.active{opacity:1; border-color:var(--dealer-yellow);}
 
   .modal-info{padding:30px 30px 32px;}
   .modal-info .mono{font-size:11px; color:var(--ink-soft); letter-spacing:.08em;}
@@ -152,7 +152,7 @@
   .cuotometro-label{display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;}
   .cuotometro-label b{font-family:'IBM Plex Mono'; font-size:14px;}
   input[type=range]{
-    width:100%; accent-color:var(--stamp-red); margin-bottom:6px;
+    width:100%; accent-color:var(--dealer-yellow); margin-bottom:6px;
   }
   .cuotometro-min{font-size:10.5px; color:var(--ink-soft); display:flex; justify-content:space-between; margin-bottom:16px;}
 
@@ -181,6 +181,37 @@
     color:rgba(231,226,211,0.5); font-size:12px;
   }
   footer a{color:var(--dealer-yellow);}
+
+  .acciones{max-width:1180px; margin:0 auto; padding:36px 28px 0;}
+  .acciones-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  @media(max-width:760px){.acciones-grid{grid-template-columns:1fr;}}
+  .accion-card{
+    background:var(--paper); color:var(--ink); padding:22px 20px; cursor:pointer;
+    border:1px solid var(--line); transition:transform .15s ease, box-shadow .15s ease;
+    display:block; text-align:left;
+  }
+  .accion-card:hover{transform:translateY(-3px); box-shadow:0 14px 28px rgba(0,0,0,0.3);}
+  .accion-card .num{font-family:'IBM Plex Mono'; font-size:11px; color:var(--ink); letter-spacing:.1em; display:block; margin-bottom:8px; background:var(--dealer-yellow); display:inline-block; padding:2px 6px;}
+  .accion-card h3{font-family:'Archivo Black'; font-size:19px; text-transform:uppercase; margin:0 0 6px;}
+  .accion-card p{font-size:13px; color:var(--ink-soft); margin:0; line-height:1.45;}
+
+  .form-modal{max-width:520px;}
+  .form-modal .modal-info{padding:30px 30px 32px;}
+  .form-field{margin-bottom:14px;}
+  .form-field label{display:block; font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-soft); margin-bottom:5px;}
+  .form-field input, .form-field textarea{
+    width:100%; padding:10px 12px; border:1px solid var(--line); background:var(--paper-2);
+    color:var(--ink); font-family:'Work Sans'; font-size:14px; border-radius:2px;
+  }
+  .form-field textarea{resize:vertical; min-height:70px;}
+  .form-row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .form-submit-btn{
+    width:100%; background:var(--dealer-yellow); color:var(--ink); border:none; font-weight:700;
+    padding:13px; font-size:14px; cursor:pointer; margin-top:6px;
+  }
+  .form-submit-btn:disabled{opacity:.6; cursor:default;}
+  .form-status{font-size:12.5px; color:var(--ink-soft); margin-top:10px; text-align:center;}
+  .form-status.ok{color:#2b7a4b; font-weight:600;}
 </style>
 </head>
 <body>
@@ -197,6 +228,26 @@
     <a class="whatsapp-btn" href="https://wa.me/5491168849847" target="_blank" rel="noopener">WhatsApp</a>
   </nav>
 </header>
+
+<section class="acciones">
+  <div class="acciones-grid">
+    <a class="accion-card" href="#stock">
+      <span class="num">01 · COMPRÁ</span>
+      <h3>Comprá tu auto</h3>
+      <p>Mirá el stock disponible, con precio contado, de lista y cuotas fijas.</p>
+    </a>
+    <button type="button" class="accion-card" onclick="abrirFormulario('vender')" style="border:1px solid var(--line); font-family:inherit;">
+      <span class="num">02 · VENDÉ</span>
+      <h3>Vendé tu auto</h3>
+      <p>Contanos qué auto tenés y mandanos las fotos. Te hacemos una propuesta.</p>
+    </button>
+    <button type="button" class="accion-card" onclick="abrirFormulario('consignar')" style="border:1px solid var(--line); font-family:inherit;">
+      <span class="num">03 · CONSIGNÁ</span>
+      <h3>Consigná tu auto</h3>
+      <p>Lo exhibimos y vendemos por vos, al precio que vos definas.</p>
+    </button>
+  </div>
+</section>
 
 <section class="hero">
   <div>
@@ -247,6 +298,63 @@
   Urquiza Cars — Av. Mitre 2877, Sarandí, Avellaneda · <a href="https://wa.me/5491168849847" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
 </footer>
 
+<div class="overlay" id="overlay-vender">
+  <div class="modal form-modal">
+    <button class="modal-close" onclick="cerrarFormulario('vender')">✕</button>
+    <div class="modal-info">
+      <h2 style="margin:0 0 4px;">Vendé tu auto</h2>
+      <p class="desc" style="margin-bottom:20px;">Contanos los datos y te contactamos con una propuesta.</p>
+      <form id="form-vender" onsubmit="return false;">
+        <div class="form-row">
+          <div class="form-field"><label>Nombre y apellido</label><input id="vender-nombre" required></div>
+          <div class="form-field"><label>WhatsApp / Teléfono</label><input id="vender-telefono" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-field"><label>Marca</label><input id="vender-marca" required></div>
+          <div class="form-field"><label>Modelo</label><input id="vender-modelo" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-field"><label>Año</label><input id="vender-anio" type="number" required></div>
+          <div class="form-field"><label>Kilómetros</label><input id="vender-km" type="number" required></div>
+        </div>
+        <div class="form-field"><label>Contanos del estado del auto</label><textarea id="vender-descripcion" placeholder="Service al día, único dueño, algún detalle a mencionar..."></textarea></div>
+        <div class="form-field"><label>Fotos del auto</label><input id="vender-fotos" type="file" accept="image/*" multiple required></div>
+        <button class="form-submit-btn" id="vender-submit" onclick="enviarSolicitud('vender')">Enviar datos</button>
+        <div class="form-status" id="vender-status"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay-consignar">
+  <div class="modal form-modal">
+    <button class="modal-close" onclick="cerrarFormulario('consignar')">✕</button>
+    <div class="modal-info">
+      <h2 style="margin:0 0 4px;">Consigná tu auto</h2>
+      <p class="desc" style="margin-bottom:20px;">Lo exhibimos y lo vendemos por vos, al precio que definas.</p>
+      <form id="form-consignar" onsubmit="return false;">
+        <div class="form-row">
+          <div class="form-field"><label>Nombre y apellido</label><input id="consignar-nombre" required></div>
+          <div class="form-field"><label>WhatsApp / Teléfono</label><input id="consignar-telefono" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-field"><label>Marca</label><input id="consignar-marca" required></div>
+          <div class="form-field"><label>Modelo</label><input id="consignar-modelo" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-field"><label>Año</label><input id="consignar-anio" type="number" required></div>
+          <div class="form-field"><label>Kilómetros</label><input id="consignar-km" type="number" required></div>
+        </div>
+        <div class="form-field"><label>Precio que te gustaría recibir ($)</label><input id="consignar-precio" type="number" required></div>
+        <div class="form-field"><label>Contanos del estado del auto</label><textarea id="consignar-descripcion" placeholder="Service al día, único dueño, algún detalle a mencionar..."></textarea></div>
+        <div class="form-field"><label>Fotos del auto</label><input id="consignar-fotos" type="file" accept="image/*" multiple required></div>
+        <button class="form-submit-btn" id="consignar-submit" onclick="enviarSolicitud('consignar')">Enviar datos</button>
+        <div class="form-status" id="consignar-status"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <div class="overlay" id="overlay">
   <div class="modal">
     <button class="modal-close" id="modal-close">✕</button>
@@ -296,7 +404,8 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, collection, query, where, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
   const FIREBASE_CONFIG = {
     apiKey: "AIzaSyBmigziZqfhLeh2J8s3O8NwzUpukBb2QrQ",
@@ -339,10 +448,12 @@
     }
   ];
 
+  const app = initializeApp(FIREBASE_CONFIG);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+
   async function loadCars(){
     try{
-      const app = initializeApp(FIREBASE_CONFIG);
-      const db = getFirestore(app);
       const q = query(collection(db, "publicStock"), where("publicado", "==", true));
       const snap = await getDocs(q);
       if(snap.empty){ cars = SAMPLE_CARS; markSample(); }
@@ -460,6 +571,71 @@
   document.getElementById('overlay').addEventListener('click', (e)=>{
     if(e.target.id === 'overlay') document.getElementById('overlay').classList.remove('open');
   });
+
+  window.abrirFormulario = function(tipo){
+    document.getElementById('overlay-'+tipo).classList.add('open');
+  };
+  window.cerrarFormulario = function(tipo){
+    document.getElementById('overlay-'+tipo).classList.remove('open');
+  };
+  document.querySelectorAll('#overlay-vender, #overlay-consignar').forEach(ov=>{
+    ov.addEventListener('click', (e)=>{
+      if(e.target === ov) ov.classList.remove('open');
+    });
+  });
+
+  window.enviarSolicitud = async function(tipo){
+    const nombre = document.getElementById(tipo+'-nombre').value.trim();
+    const telefono = document.getElementById(tipo+'-telefono').value.trim();
+    const marca = document.getElementById(tipo+'-marca').value.trim();
+    const modelo = document.getElementById(tipo+'-modelo').value.trim();
+    const anio = document.getElementById(tipo+'-anio').value;
+    const km = document.getElementById(tipo+'-km').value;
+    const descripcion = document.getElementById(tipo+'-descripcion').value.trim();
+    const fotosInput = document.getElementById(tipo+'-fotos');
+    const precioDeseado = tipo === 'consignar' ? document.getElementById('consignar-precio').value : null;
+
+    if(!nombre || !telefono || !marca || !modelo || !anio || !km || !fotosInput.files.length){
+      document.getElementById(tipo+'-status').textContent = 'Completá todos los campos obligatorios y subí al menos una foto.';
+      return;
+    }
+
+    const btn = document.getElementById(tipo+'-submit');
+    const statusEl = document.getElementById(tipo+'-status');
+    btn.disabled = true;
+    statusEl.className = 'form-status';
+
+    try{
+      const fotos = [];
+      for(let i=0; i<fotosInput.files.length; i++){
+        statusEl.textContent = `Subiendo foto ${i+1} de ${fotosInput.files.length}...`;
+        const file = fotosInput.files[i];
+        const fileRef = ref(storage, `solicitudes/${tipo}/${Date.now()}-${file.name}`);
+        await uploadBytes(fileRef, file);
+        fotos.push(await getDownloadURL(fileRef));
+      }
+
+      statusEl.textContent = 'Enviando...';
+      const data = {
+        tipo, nombre, telefono, marca, modelo,
+        anio: parseInt(anio), km: parseInt(km),
+        descripcion, fotos,
+        estado: 'pendiente',
+        fechaCreacion: serverTimestamp()
+      };
+      if(tipo === 'consignar') data.precioDeseado = parseFloat(precioDeseado) || 0;
+
+      await addDoc(collection(db, 'solicitudes'), data);
+
+      statusEl.textContent = '¡Listo! Recibimos tus datos, te contactamos pronto.';
+      statusEl.className = 'form-status ok';
+      document.getElementById('form-'+tipo).reset();
+      setTimeout(()=>{ cerrarFormulario(tipo); statusEl.textContent=''; }, 2500);
+    }catch(err){
+      statusEl.textContent = 'Hubo un error al enviar: ' + err.message;
+    }
+    btn.disabled = false;
+  };
 
   loadCars();
 </script>
