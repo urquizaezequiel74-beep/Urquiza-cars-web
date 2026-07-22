@@ -142,9 +142,32 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     font-family:'IBM Plex Mono'; font-size:12.5px; color:var(--alerta-rojo); font-weight:600;
     margin:-4px 0 12px;
   }
+  .banner-oferta{
+    max-width:1180px; margin:28px auto 0; padding:0 28px;
+  }
+  .banner-oferta-inner{
+    background:var(--alerta-rojo); color:#fff; padding:22px 28px; border-radius:6px;
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;
+    box-shadow:0 14px 34px rgba(214,40,40,0.35);
+  }
+  .banner-oferta-texto .display{font-size:20px; margin-bottom:2px;}
+  .banner-oferta-texto p{margin:0; font-size:13px; opacity:.9;}
+  .banner-oferta-timer{
+    font-family:'Archivo Black'; font-size:clamp(30px,5vw,44px); letter-spacing:.02em;
+    background:rgba(0,0,0,0.18); padding:8px 20px; border-radius:4px;
+  }
+  @media(max-width:600px){
+    .banner-oferta{padding:0 16px;}
+    .banner-oferta-inner{padding:16px 18px;}
+    .banner-oferta-timer{font-size:28px; padding:6px 14px;}
+  }
   @keyframes pulse-oferta{0%,100%{transform:rotate(3deg) scale(1);}50%{transform:rotate(3deg) scale(1.07);}}
   .precio-antes{font-size:12.5px; color:var(--ink-soft); text-decoration:line-through; margin-right:6px;}
   .precio-oferta{color:var(--alerta-rojo) !important;}
+  .transferencia-tag{
+    display:inline-block; background:var(--dealer-yellow); color:var(--ink);
+    font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:2px; margin-top:4px;
+  }
   .ficha .cuota-hint{font-size:11px; color:var(--ink-soft); text-align:right; line-height:1.3;}
   .ficha .cuota-hint b{color:var(--ink); font-family:'IBM Plex Mono'; font-size:13px;}
 
@@ -354,6 +377,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </section>
 
+<div class="banner-oferta" id="banner-oferta" style="display:none;">
+  <div class="banner-oferta-inner">
+    <div class="banner-oferta-texto">
+      <div class="display">🔥 OFERTAS POR TIEMPO LIMITADO</div>
+      <p>Precios especiales en autos seleccionados — no se repiten.</p>
+    </div>
+    <div class="banner-oferta-timer" data-countdown-banner>48:00:00</div>
+  </div>
+</div>
+
 <section class="hero">
   <div>
     <h1>Tu próximo auto<br>usado, en <span class="accent">cuotas fijas</span><br>en pesos.</h1>
@@ -484,6 +517,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <h2 id="modal-title"></h2>
         <span id="modal-oferta-tag" style="display:none; background:var(--alerta-rojo); color:#fff; font-family:'Archivo Black'; font-size:11px; padding:3px 8px; margin-bottom:6px; display:inline-block;">🔥 OFERTA</span>
         <div id="modal-oferta-countdown" class="oferta-countdown-modal" style="display:none;">⏳ Termina en --:--:--</div>
+        <span id="modal-transferencia-tag" class="transferencia-tag" style="display:none; margin-bottom:8px;">🎁 Transferencia de regalo</span>
         <p class="desc" id="modal-desc" style="font-size:14.5px; line-height:1.65; margin-bottom:22px; padding-bottom:18px; border-bottom:1px solid var(--line);"></p>
 
         <div class="precios-compare">
@@ -602,6 +636,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       return;
     }
     const carsOrdenados = [...cars].sort((a,b) => (b.ofertaActiva?1:0) - (a.ofertaActiva?1:0));
+    document.getElementById('banner-oferta').style.display = cars.some(c=>c.ofertaActiva) ? 'block' : 'none';
     grid.innerHTML = carsOrdenados.map(c => {
       const plazosDisponibles = Object.keys(c.cuotas||{}).map(Number).sort((a,b)=>a-b);
       const cuotaMasBaja = plazosDisponibles.length ? c.cuotas[plazosDisponibles[plazosDisponibles.length-1]] : 0;
@@ -615,6 +650,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="body">
           <h3>${c.marca} ${c.modelo}</h3>
           <div class="specs">${fmtKm.format(c.km)} km · hasta ${plazosDisponibles[plazosDisponibles.length-1]||''} cuotas</div>
+          ${c.transferenciaRegalo ? '<span class="transferencia-tag">🎁 Transferencia de regalo</span>' : ''}
           <div class="precio-row">
             <div>
               ${c.ofertaActiva ? `<span class="precio-antes">${fmt.format(c.precioAntesOferta)}</span>` : ''}
@@ -646,6 +682,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     document.getElementById('modal-anio-km').textContent = `${currentCar.anio} · ${fmtKm.format(currentCar.km)} km`;
     document.getElementById('modal-title').textContent = `${currentCar.marca} ${currentCar.modelo}`;
     document.getElementById('modal-desc').textContent = currentCar.descripcion || '';
+    document.getElementById('modal-transferencia-tag').style.display = currentCar.transferenciaRegalo ? 'inline-block' : 'none';
     document.getElementById('modal-precio-efectivo').textContent = fmt.format(currentCar.precioEfectivo);
     const ofertaTag = document.getElementById('modal-oferta-tag');
     const precioAntesEl = document.getElementById('modal-precio-antes');
@@ -797,7 +834,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     let deadline = parseInt(localStorage.getItem(KEY));
     const now = Date.now();
     if(!deadline || deadline < now){
-      deadline = now + 24*60*60*1000;
+      deadline = now + 48*60*60*1000;
       localStorage.setItem(KEY, String(deadline));
     }
     return deadline;
@@ -817,6 +854,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const texto = formatCountdown(restante);
     document.querySelectorAll('[data-countdown-card]').forEach(el=>{
       el.textContent = `⏳ ${texto}`;
+    });
+    document.querySelectorAll('[data-countdown-banner]').forEach(el=>{
+      el.textContent = texto;
     });
     const modalEl = document.getElementById('modal-oferta-countdown');
     if(modalEl && modalEl.style.display !== 'none'){
