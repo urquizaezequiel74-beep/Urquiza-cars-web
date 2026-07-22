@@ -134,6 +134,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     transform:rotate(3deg); box-shadow:0 4px 10px rgba(0,0,0,0.3); z-index:2;
     animation:pulse-oferta 1.4s ease-in-out infinite;
   }
+  .oferta-countdown{
+    font-family:'IBM Plex Mono'; font-size:11px; color:var(--alerta-rojo); font-weight:600;
+    margin-top:3px; display:block;
+  }
+  .oferta-countdown-modal{
+    font-family:'IBM Plex Mono'; font-size:12.5px; color:var(--alerta-rojo); font-weight:600;
+    margin:-4px 0 12px;
+  }
   @keyframes pulse-oferta{0%,100%{transform:rotate(3deg) scale(1);}50%{transform:rotate(3deg) scale(1.07);}}
   .precio-antes{font-size:12.5px; color:var(--ink-soft); text-decoration:line-through; margin-right:6px;}
   .precio-oferta{color:var(--alerta-rojo) !important;}
@@ -474,7 +482,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="modal-info">
         <span class="mono" id="modal-anio-km"></span>
         <h2 id="modal-title"></h2>
-        <span id="modal-oferta-tag" style="display:none; background:var(--alerta-rojo); color:#fff; font-family:'Archivo Black'; font-size:11px; padding:3px 8px; margin-bottom:10px; display:inline-block;">🔥 OFERTA</span>
+        <span id="modal-oferta-tag" style="display:none; background:var(--alerta-rojo); color:#fff; font-family:'Archivo Black'; font-size:11px; padding:3px 8px; margin-bottom:6px; display:inline-block;">🔥 OFERTA</span>
+        <div id="modal-oferta-countdown" class="oferta-countdown-modal" style="display:none;">⏳ Termina en --:--:--</div>
         <p class="desc" id="modal-desc" style="font-size:14.5px; line-height:1.65; margin-bottom:22px; padding-bottom:18px; border-bottom:1px solid var(--line);"></p>
 
         <div class="precios-compare">
@@ -611,6 +620,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               ${c.ofertaActiva ? `<span class="precio-antes">${fmt.format(c.precioAntesOferta)}</span>` : ''}
               <span class="precio${c.ofertaActiva ? ' precio-oferta' : ''}">${fmt.format(c.precioEfectivo)}</span>
               <div style="font-size:10.5px;color:var(--ink-soft);margin-top:2px">contado · lista ${fmt.format(c.precioLista)}</div>
+              ${c.ofertaActiva ? `<span class="oferta-countdown" data-countdown-card>⏳ --:--:--</span>` : ''}
             </div>
             <span class="cuota-hint">desde<br><b>${fmt.format(cuotaMasBaja)}</b>/mes</span>
           </div>
@@ -621,6 +631,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     grid.querySelectorAll('.ficha').forEach(el=>{
       el.addEventListener('click', ()=> openModal(el.dataset.id));
     });
+    tickCountdown();
   }
 
   let currentCar = null;
@@ -638,16 +649,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     document.getElementById('modal-precio-efectivo').textContent = fmt.format(currentCar.precioEfectivo);
     const ofertaTag = document.getElementById('modal-oferta-tag');
     const precioAntesEl = document.getElementById('modal-precio-antes');
+    const countdownEl = document.getElementById('modal-oferta-countdown');
     if(currentCar.ofertaActiva){
       ofertaTag.style.display = 'inline-block';
       precioAntesEl.style.display = 'block';
       precioAntesEl.textContent = fmt.format(currentCar.precioAntesOferta);
+      countdownEl.style.display = 'block';
       document.getElementById('modal-precio-efectivo').style.color = 'var(--alerta-rojo)';
       document.getElementById('stamp-efectivo').style.borderColor = 'var(--alerta-rojo)';
       document.getElementById('stamp-efectivo').querySelector('small').style.color = 'var(--alerta-rojo)';
+      tickCountdown();
     } else {
       ofertaTag.style.display = 'none';
       precioAntesEl.style.display = 'none';
+      countdownEl.style.display = 'none';
       document.getElementById('modal-precio-efectivo').style.color = '';
       document.getElementById('stamp-efectivo').style.borderColor = '';
       document.getElementById('stamp-efectivo').querySelector('small').style.color = '';
@@ -776,6 +791,39 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
     btn.disabled = false;
   };
+
+  function getOfertaDeadline(){
+    const KEY = 'urquizaOfertaDeadline';
+    let deadline = parseInt(localStorage.getItem(KEY));
+    const now = Date.now();
+    if(!deadline || deadline < now){
+      deadline = now + 24*60*60*1000;
+      localStorage.setItem(KEY, String(deadline));
+    }
+    return deadline;
+  }
+
+  function formatCountdown(ms){
+    if(ms < 0) ms = 0;
+    const h = String(Math.floor(ms / 3600000)).padStart(2,'0');
+    const m = String(Math.floor((ms % 3600000) / 60000)).padStart(2,'0');
+    const s = String(Math.floor((ms % 60000) / 1000)).padStart(2,'0');
+    return `${h}:${m}:${s}`;
+  }
+
+  function tickCountdown(){
+    const deadline = getOfertaDeadline();
+    const restante = deadline - Date.now();
+    const texto = formatCountdown(restante);
+    document.querySelectorAll('[data-countdown-card]').forEach(el=>{
+      el.textContent = `⏳ ${texto}`;
+    });
+    const modalEl = document.getElementById('modal-oferta-countdown');
+    if(modalEl && modalEl.style.display !== 'none'){
+      modalEl.textContent = `⏳ Termina en ${texto}`;
+    }
+  }
+  setInterval(tickCountdown, 1000);
 
   loadCars();
   loadClientes();
