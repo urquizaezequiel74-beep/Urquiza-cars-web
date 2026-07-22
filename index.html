@@ -592,7 +592,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       grid.innerHTML = '<div class="empty-state">No hay autos publicados por el momento.</div>';
       return;
     }
-    grid.innerHTML = cars.map(c => {
+    const carsOrdenados = [...cars].sort((a,b) => (b.ofertaActiva?1:0) - (a.ofertaActiva?1:0));
+    grid.innerHTML = carsOrdenados.map(c => {
       const plazosDisponibles = Object.keys(c.cuotas||{}).map(Number).sort((a,b)=>a-b);
       const cuotaMasBaja = plazosDisponibles.length ? c.cuotas[plazosDisponibles[plazosDisponibles.length-1]] : 0;
       return `
