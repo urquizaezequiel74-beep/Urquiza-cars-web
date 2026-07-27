@@ -267,6 +267,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
   .fine-print{font-size:10px; color:var(--ink-soft); margin-top:10px; line-height:1.4;}
 
+  .share-btn{
+    display:block; width:100%; text-align:center; background:var(--asphalt); color:var(--paper);
+    text-decoration:none; font-weight:700; padding:12px; font-size:14px; border:none;
+    border-radius:2px; cursor:pointer; margin-top:8px; font-family:inherit;
+  }
+  .share-status{font-size:11.5px; color:var(--ink-soft); text-align:center; margin-top:8px; min-height:14px;}
+
   footer{
     border-top:1px solid var(--line-dark); padding:30px 28px; text-align:center;
     color:rgba(231,226,211,0.5); font-size:12px;
@@ -629,6 +636,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
 
           <a class="contact-cta" id="contact-cta" href="#" target="_blank" rel="noopener">Consultar por este auto</a>
+          <button type="button" class="share-btn" id="share-btn" onclick="compartirAuto()">🔗 Compartir este auto</button>
+          <div class="share-status" id="share-status"></div>
           <p class="fine-print">Cálculo estimativo, sujeto a evaluación crediticia y verificación de la unidad. Tasa e importes finales se confirman en el local.</p>
         </div>
       </div>
@@ -699,6 +708,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       markSample();
     }
     renderGrid();
+    abrirDesdeURL();
+  }
+
+  function abrirDesdeURL(){
+    const id = new URLSearchParams(location.search).get('auto');
+    if(id && cars.some(c => c.id === id)) openModal(id);
   }
 
   function markSample(){
@@ -817,8 +832,41 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const cta = document.getElementById('contact-cta');
     cta.href = `https://wa.me/5491168849847?text=${encodeURIComponent('Hola! Te consulto por el '+currentCar.marca+' '+currentCar.modelo+' '+currentCar.anio)}`;
 
+    const shareStatus = document.getElementById('share-status');
+    if(shareStatus) shareStatus.textContent = '';
+
     document.getElementById('overlay').classList.add('open');
+
+    // deja el link de este auto en la URL, para poder compartirlo tal cual
+    const url = new URL(location.href);
+    url.searchParams.set('auto', currentCar.id);
+    history.replaceState(null, '', url);
   }
+
+  window.compartirAuto = async function(){
+    if(!currentCar) return;
+    const url = new URL(location.href);
+    url.searchParams.set('auto', currentCar.id);
+    const texto = `Mirá este ${currentCar.marca} ${currentCar.modelo} ${currentCar.anio} en Urquiza Cars`;
+    const statusEl = document.getElementById('share-status');
+
+    if(navigator.share){
+      try{
+        await navigator.share({ title: texto, text: texto, url: url.toString() });
+      }catch(err){
+        // el usuario canceló el share, no hacemos nada
+      }
+      return;
+    }
+
+    try{
+      await navigator.clipboard.writeText(url.toString());
+      statusEl.textContent = '¡Link copiado! Pegalo donde quieras.';
+      setTimeout(()=>{ statusEl.textContent = ''; }, 3000);
+    }catch(err){
+      statusEl.textContent = url.toString();
+    }
+  };
 
   function updateCuota(){
     const financiado = currentCar.montoFinanciar || 0;
@@ -828,11 +876,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     document.getElementById('monto-financiado').textContent = fmt.format(financiado);
   }
 
-  document.getElementById('modal-close').addEventListener('click', ()=>{
+  function cerrarModalAuto(){
     document.getElementById('overlay').classList.remove('open');
-  });
+    const url = new URL(location.href);
+    url.searchParams.delete('auto');
+    history.replaceState(null, '', url);
+  }
+  document.getElementById('modal-close').addEventListener('click', cerrarModalAuto);
   document.getElementById('overlay').addEventListener('click', (e)=>{
-    if(e.target.id === 'overlay') document.getElementById('overlay').classList.remove('open');
+    if(e.target.id === 'overlay') cerrarModalAuto();
   });
 
   window.abrirFormulario = function(tipo){
