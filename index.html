@@ -274,6 +274,28 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
   .share-status{font-size:11.5px; color:var(--ink-soft); text-align:center; margin-top:8px; min-height:14px;}
 
+  .reservar-btn{
+    display:block; width:100%; text-align:center; background:var(--dealer-yellow); color:var(--asphalt);
+    text-decoration:none; font-weight:700; padding:12px; font-size:14px; border:none;
+    border-radius:2px; cursor:pointer; margin-top:10px; font-family:inherit;
+  }
+  .seña-monto{font-family:'Archivo Black'; font-size:20px; color:var(--ink); margin:4px 0 10px;}
+  .cuenta-datos{
+    background:var(--paper-2); border:1px dashed var(--line); border-radius:4px;
+    padding:14px 16px; margin:0 0 16px; font-size:13.5px; line-height:1.6;
+  }
+  .cuenta-datos .fila{
+    display:flex; justify-content:space-between; align-items:center; gap:8px;
+    flex-wrap:wrap; margin-bottom:6px;
+  }
+  .cuenta-datos .fila:last-child{margin-bottom:0;}
+  .cuenta-datos .fila span{color:var(--ink-soft);}
+  .cuenta-datos .fila b{font-family:'IBM Plex Mono'; color:var(--ink); word-break:break-all;}
+  .copy-btn{
+    background:var(--ink); color:var(--paper); border:none; font-size:10.5px; padding:4px 9px;
+    border-radius:2px; cursor:pointer; font-family:'IBM Plex Mono'; flex-shrink:0;
+  }
+
   footer{
     border-top:1px solid var(--line-dark); padding:30px 28px; text-align:center;
     color:rgba(231,226,211,0.5); font-size:12px;
@@ -592,6 +614,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </div>
 
+<div class="overlay" id="overlay-reservar">
+  <div class="modal form-modal">
+    <button class="modal-close" onclick="cerrarReserva()">✕</button>
+    <div class="modal-info">
+      <h2 style="margin:0 0 4px;">Reservá tu auto</h2>
+      <p class="desc" id="reservar-auto-nombre" style="margin-bottom:10px; font-weight:600; color:var(--ink);"></p>
+      <p class="desc" style="margin-bottom:10px;">Para reservarlo, transferí la seña mínima a esta cuenta de Mercado Pago:</p>
+      <div class="seña-monto">Seña mínima: $500.000</div>
+      <div class="cuenta-datos">
+        <div class="fila"><span>Alias</span> <b>urquiza.st</b> <button type="button" class="copy-btn" onclick="copiarTexto('urquiza.st', this)">Copiar</button></div>
+        <div class="fila"><span>CVU</span> <b>0000003100040168960433</b> <button type="button" class="copy-btn" onclick="copiarTexto('0000003100040168960433', this)">Copiar</button></div>
+        <div class="fila"><span>Titular</span> <b>Rodrigo Guido Urquiza</b></div>
+      </div>
+      <form id="form-reservar" onsubmit="return false;">
+        <div class="form-row">
+          <div class="form-field"><label>Nombre y apellido</label><input id="reservar-nombre" required></div>
+          <div class="form-field"><label>WhatsApp / Teléfono</label><input id="reservar-telefono" required></div>
+        </div>
+        <div class="form-field"><label>Monto que transferiste</label><input id="reservar-monto" type="number" placeholder="500000" required></div>
+        <button class="form-submit-btn" id="reservar-submit" onclick="enviarReserva()">Ya transferí, avisar a Urquiza Cars</button>
+        <div class="form-status" id="reservar-status"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <div class="overlay" id="overlay">
   <div class="modal">
     <button class="modal-close" id="modal-close">✕</button>
@@ -636,6 +684,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
 
           <a class="contact-cta" id="contact-cta" href="#" target="_blank" rel="noopener">Consultar por este auto</a>
+          <button type="button" class="reservar-btn" id="reservar-btn" onclick="abrirReserva()">🔒 Reservar este auto</button>
           <button type="button" class="share-btn" id="share-btn" onclick="compartirAuto()">🔗 Compartir este auto</button>
           <div class="share-status" id="share-status"></div>
           <p class="fine-print">Cálculo estimativo, sujeto a evaluación crediticia y verificación de la unidad. Tasa e importes finales se confirman en el local.</p>
@@ -866,6 +915,80 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }catch(err){
       statusEl.textContent = url.toString();
     }
+  };
+
+  window.abrirReserva = function(){
+    if(!currentCar) return;
+    document.getElementById('reservar-auto-nombre').textContent = `${currentCar.marca} ${currentCar.modelo} ${currentCar.anio}`;
+    document.getElementById('reservar-status').textContent = '';
+    document.getElementById('overlay-reservar').classList.add('open');
+  };
+  window.cerrarReserva = function(){
+    document.getElementById('overlay-reservar').classList.remove('open');
+  };
+  document.getElementById('overlay-reservar').addEventListener('click', (e)=>{
+    if(e.target.id === 'overlay-reservar') cerrarReserva();
+  });
+
+  window.copiarTexto = async function(texto, btn){
+    try{
+      await navigator.clipboard.writeText(texto);
+      const original = btn.textContent;
+      btn.textContent = '¡Copiado!';
+      setTimeout(()=>{ btn.textContent = original; }, 1500);
+    }catch(err){
+      // si el navegador no permite copiar, no hacemos nada
+    }
+  };
+
+  window.enviarReserva = async function(){
+    if(!currentCar) return;
+    const nombre = document.getElementById('reservar-nombre').value.trim();
+    const telefono = document.getElementById('reservar-telefono').value.trim();
+    const monto = document.getElementById('reservar-monto').value;
+    const statusEl = document.getElementById('reservar-status');
+
+    if(!nombre || !telefono || !monto){
+      statusEl.textContent = 'Completá todos los campos.';
+      return;
+    }
+    if(parseFloat(monto) < 500000){
+      statusEl.textContent = 'La seña mínima es de $500.000.';
+      return;
+    }
+
+    const btn = document.getElementById('reservar-submit');
+    btn.disabled = true;
+    statusEl.className = 'form-status';
+    statusEl.textContent = 'Enviando...';
+
+    try{
+      await addDoc(collection(db, 'solicitudes'), {
+        tipo: 'reserva',
+        nombre, telefono,
+        montoTransferido: parseFloat(monto),
+        auto: `${currentCar.marca} ${currentCar.modelo} ${currentCar.anio}`,
+        autoId: currentCar.id,
+        estado: 'pendiente',
+        fechaCreacion: serverTimestamp()
+      });
+
+      await addDoc(collection(db, 'mail'), {
+        to: ['urquizaezequiel74@gmail.com'],
+        message: {
+          subject: `Nueva reserva: ${currentCar.marca} ${currentCar.modelo}`,
+          text: `RESERVA\nAuto: ${currentCar.marca} ${currentCar.modelo} ${currentCar.anio}\nNombre: ${nombre}\nTeléfono: ${telefono}\nMonto informado: $${monto}\n\nVerificar el ingreso de la transferencia en Mercado Pago antes de confirmar la reserva.`
+        }
+      });
+
+      statusEl.textContent = '¡Listo! Te contactamos para confirmar la reserva.';
+      statusEl.className = 'form-status ok';
+      document.getElementById('form-reservar').reset();
+      setTimeout(()=>{ cerrarReserva(); statusEl.textContent=''; }, 2500);
+    }catch(err){
+      statusEl.textContent = 'Hubo un error al enviar: ' + err.message;
+    }
+    btn.disabled = false;
   };
 
   function updateCuota(){
