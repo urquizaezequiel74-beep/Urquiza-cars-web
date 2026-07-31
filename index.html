@@ -794,7 +794,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         <div class="body">
           <h3>${c.marca} ${c.modelo}</h3>
-          <div class="specs">${fmtKm.format(c.km)} km · hasta ${plazosDisponibles[plazosDisponibles.length-1]||''} cuotas</div>
+          <div class="specs">hasta ${plazosDisponibles[plazosDisponibles.length-1]||''} cuotas</div>
           ${c.transferenciaRegalo ? '<span class="transferencia-tag">🎁 Transferencia de regalo</span>' : ''}
           <div class="precio-row">
             <div>
@@ -824,7 +824,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const plazosDisponibles = Object.keys(currentCar.cuotas||{}).map(Number).sort((a,b)=>a-b);
     currentPlazo = plazosDisponibles[0];
 
-    document.getElementById('modal-anio-km').textContent = `${currentCar.anio} · ${fmtKm.format(currentCar.km)} km`;
+    document.getElementById('modal-anio-km').textContent = `${currentCar.anio}`;
     document.getElementById('modal-title').textContent = `${currentCar.marca} ${currentCar.modelo}`;
     document.getElementById('modal-desc').textContent = currentCar.descripcion || '';
     document.getElementById('modal-transferencia-tag').style.display = currentCar.transferenciaRegalo ? 'inline-block' : 'none';
