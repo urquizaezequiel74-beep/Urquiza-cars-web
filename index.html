@@ -12,8 +12,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Urquiza Cars — Autos usados en Sarandí, Avellaneda</title>
 <meta name="description" content="Autos usados en Sarandí, Avellaneda. Precio contado, anticipo y cuotas fijas.">
-
-<!-- Open Graph: vista previa al compartir el link (WhatsApp, Facebook, Instagram) -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://urquizacars.com/">
 <meta property="og:title" content="Urquiza Cars — Autos usados en Sarandí, Avellaneda">
@@ -22,8 +20,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="es_AR">
-
-<!-- Twitter Card (algunos clientes de mensajería también la usan) -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Urquiza Cars — Autos usados en Sarandí, Avellaneda">
 <meta name="twitter:description" content="Precio contado, precio de lista y cuotas fijas. Comprá, vendé o consigná tu auto.">
@@ -56,7 +52,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
   .mono{font-family:'IBM Plex Mono', monospace;}
   .display{font-family:'Archivo Black', sans-serif; text-transform:uppercase; letter-spacing:-0.01em;}
-
   header.site{
     display:flex; align-items:center; justify-content:space-between;
     padding:22px 28px;
@@ -78,7 +73,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     padding:9px 16px; border-radius:var(--radius); text-decoration:none; font-size:13px;
     letter-spacing:0.02em;
   }
-
   .hero{
     padding:72px 28px 56px; max-width:1180px; margin:0 auto;
     display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px; align-items:end;
@@ -92,7 +86,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .hero-stats .stat{border-left:2px solid var(--dealer-yellow); padding-left:12px;}
   .hero-stats .stat b{display:block; font-family:'Archivo Black'; font-size:26px;}
   .hero-stats .stat span{font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:rgba(231,226,211,0.55);}
-
   .hero-plate{
     justify-self:end; background:var(--paper); color:var(--ink);
     padding:20px 22px; transform:rotate(-2deg);
@@ -102,14 +95,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .hero-plate .mono{font-size:12px; letter-spacing:.08em; color:var(--ink-soft); display:block; margin-bottom:6px;}
   .hero-plate .display{font-size:15px; margin-bottom:10px;}
   .hero-plate .price{font-family:'Archivo Black'; font-size:34px; color:var(--ink);}
-
   .listado{max-width:1180px; margin:0 auto; padding:20px 28px 90px;}
   .listado-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:22px; flex-wrap:wrap; gap:12px;}
   .listado-head h2{font-size:22px; margin:0;}
   .filtro-count{font-size:13px; color:rgba(231,226,211,0.5);}
-
   .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:22px;}
-
   .ficha{
     background:var(--paper); color:var(--ink);
     position:relative; cursor:pointer;
@@ -170,8 +160,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
   .ficha .cuota-hint{font-size:11px; color:var(--ink-soft); text-align:right; line-height:1.3;}
   .ficha .cuota-hint b{color:var(--ink); font-family:'IBM Plex Mono'; font-size:13px;}
-
-  /* --- Cartel cotización dólar blue --- */
   .banner-dolar{
     max-width:1180px; margin:28px auto 0; padding:0 28px;
   }
@@ -197,11 +185,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .banner-dolar-precio{text-align:center;}
     .banner-dolar-nuestro{font-size:30px;}
   }
-
   .empty-state, .loading-state{
     padding:60px 20px; text-align:center; color:rgba(231,226,211,0.55); font-size:14px;
   }
-
   .overlay{
     position:fixed; inset:0; background:rgba(10,12,14,0.72); z-index:100;
     display:none; align-items:flex-start; justify-content:center;
@@ -217,28 +203,23 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     border:none; width:34px; height:34px; font-size:16px; cursor:pointer;
   }
   .modal-inner{position:relative; display:flex; flex-direction:column;}
-
   .modal-gallery{background:var(--paper-2); padding:24px 24px 0; display:flex; flex-direction:column; align-items:center;}
   .modal-gallery .main-photo{width:100%; max-width:380px; aspect-ratio:4/3; object-fit:cover; display:block; border-radius:4px; box-shadow:0 8px 20px rgba(0,0,0,0.18);}
   .thumb-row{display:flex; gap:6px; padding:12px 0; justify-content:center; flex-wrap:wrap;}
   .thumb-row img{width:52px; height:39px; object-fit:cover; cursor:pointer; opacity:.5; border:1px solid transparent; border-radius:2px;}
   .thumb-row img.active{opacity:1; border-color:var(--dealer-yellow);}
-
   .modal-info{padding:30px 30px 32px;}
   .modal-info .mono{font-size:11px; color:var(--ink-soft); letter-spacing:.08em;}
   .modal-info h2{margin:4px 0 12px; font-size:26px;}
   .modal-info .desc{font-size:13.5px; color:var(--ink-soft); line-height:1.55; margin-bottom:20px;}
-
   .stamp{
     display:inline-block; border:3px solid var(--stamp-red); color:var(--stamp-red);
     padding:6px 12px; font-family:'Archivo Black'; font-size:22px;
   }
   .stamp small{display:block; font-family:'IBM Plex Mono'; font-size:10px; letter-spacing:.1em; color:var(--stamp-red);}
-
   .precios-compare{display:flex; gap:22px; flex-wrap:wrap; margin:4px 0 14px; padding-bottom:16px; border-bottom:1px solid var(--line);}
   .precio-anticipo-unico{font-size:13px; color:var(--ink-soft); margin-bottom:20px;}
   .precio-anticipo-unico b{font-family:'IBM Plex Mono'; color:var(--ink); font-size:15px;}
-
   .cuotometro{border-top:1px dashed var(--line); padding-top:18px;}
   .cuotometro-label{display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;}
   .cuotometro-label b{font-family:'IBM Plex Mono'; font-size:14px;}
@@ -246,34 +227,29 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     width:100%; accent-color:var(--dealer-yellow); margin-bottom:6px;
   }
   .cuotometro-min{font-size:10.5px; color:var(--ink-soft); display:flex; justify-content:space-between; margin-bottom:16px;}
-
   .plazo-select{display:flex; gap:6px; margin-bottom:18px; flex-wrap:wrap;}
   .plazo-btn{
     font-family:'IBM Plex Mono'; font-size:12px; padding:6px 10px; border:1px solid var(--ink);
     background:transparent; cursor:pointer; color:var(--ink);
   }
   .plazo-btn.active{background:var(--ink); color:var(--paper);}
-
   .resultado{
     background:var(--ink); color:var(--paper); padding:16px 18px;
     display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;
   }
   .resultado .cuota-num{font-family:'Archivo Black'; font-size:30px; color:var(--dealer-yellow);}
   .resultado .cuota-label{font-size:11px; text-transform:uppercase; letter-spacing:.06em; opacity:.75;}
-
   .contact-cta{
     display:block; text-align:center; background:var(--dealer-yellow); color:var(--asphalt);
     text-decoration:none; font-weight:700; padding:12px; font-size:14px;
   }
   .fine-print{font-size:10px; color:var(--ink-soft); margin-top:10px; line-height:1.4;}
-
   .share-btn{
     display:block; width:100%; text-align:center; background:var(--asphalt); color:var(--paper);
     text-decoration:none; font-weight:700; padding:12px; font-size:14px; border:none;
     border-radius:2px; cursor:pointer; margin-top:8px; font-family:inherit;
   }
   .share-status{font-size:11.5px; color:var(--ink-soft); text-align:center; margin-top:8px; min-height:14px;}
-
   .reservar-btn{
     display:block; width:100%; text-align:center; background:var(--dealer-yellow); color:var(--asphalt);
     text-decoration:none; font-weight:700; padding:12px; font-size:14px; border:none;
@@ -295,13 +271,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     background:var(--ink); color:var(--paper); border:none; font-size:10.5px; padding:4px 9px;
     border-radius:2px; cursor:pointer; font-family:'IBM Plex Mono'; flex-shrink:0;
   }
-
   footer{
     border-top:1px solid var(--line-dark); padding:30px 28px; text-align:center;
     color:rgba(231,226,211,0.5); font-size:12px;
   }
   footer a{color:var(--dealer-yellow);}
-
   .wa-float{
     position:fixed; bottom:22px; right:22px; z-index:200;
     width:58px; height:58px; border-radius:50%;
@@ -315,10 +289,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .wa-float{width:52px; height:52px; bottom:16px; right:16px;}
     .wa-float svg{width:27px; height:27px;}
   }
-
   .mapa-wrap{margin-top:18px; border:1px solid var(--line-dark); border-radius:4px; overflow:hidden;}
   .mapa-wrap iframe{width:100%; height:280px; display:block; border:0;}
-
   .clientes-carousel{position:relative; max-width:640px; margin:0 auto; aspect-ratio:4/3; background:var(--paper-2); border-radius:6px; overflow:hidden; box-shadow:0 14px 30px rgba(0,0,0,0.3);}
   .clientes-carousel img, .clientes-carousel video{
     position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:center;
@@ -329,37 +301,29 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .clientes-dots{display:flex; gap:6px; justify-content:center; margin-top:14px;}
   .clientes-dots span{width:7px; height:7px; border-radius:50%; background:rgba(231,226,211,0.3);}
   .clientes-dots span.active{background:var(--dealer-yellow);}
-
   .acciones{max-width:1180px; margin:0 auto; padding:36px 28px 0;}
   .acciones-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
   @media(max-width:760px){.acciones-grid{grid-template-columns:1fr;}}
-
   @media(max-width:600px){
     header.site{padding:14px 16px; flex-wrap:wrap; gap:10px;}
     .brand .display{font-size:18px;}
     .site-nav{gap:0; flex-wrap:wrap; justify-content:flex-end; row-gap:6px;}
     .site-nav a{margin-left:14px; font-size:13px;}
     .whatsapp-btn{padding:7px 12px; font-size:12px;}
-
     .hero{grid-template-columns:1fr; padding:32px 16px 36px; gap:24px;}
     .hero h1{font-size:34px;}
     .hero-plate{justify-self:stretch; transform:none;}
-
     .acciones{padding:24px 16px 0;}
     .listado{padding:16px 16px 60px;}
-
     .grid{grid-template-columns:1fr 1fr; gap:12px;}
     .ficha h3{font-size:15px;}
     .ficha .precio{font-size:18px;}
-
     .modal{max-width:100%; margin:0 8px;}
     .modal-info{padding:20px 18px 24px;}
     .precios-compare{gap:14px;}
     .stamp{font-size:18px; padding:5px 9px;}
-
     .mapa-wrap iframe{height:220px;}
     .clientes-carousel{max-width:100%;}
-
     .form-row{grid-template-columns:1fr;}
   }
   @media(max-width:380px){
@@ -374,7 +338,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .accion-card .num{font-family:'IBM Plex Mono'; font-size:11px; color:var(--ink); letter-spacing:.1em; display:block; margin-bottom:8px; background:var(--dealer-yellow); display:inline-block; padding:2px 6px;}
   .accion-card h3{font-family:'Archivo Black'; font-size:19px; text-transform:uppercase; margin:0 0 6px;}
   .accion-card p{font-size:13px; color:var(--ink-soft); margin:0; line-height:1.45;}
-
   .form-modal{max-width:520px;}
   .form-modal .modal-info{padding:30px 30px 32px;}
   .form-field{margin-bottom:14px;}
@@ -395,10 +358,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </style>
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NJRN5M4W"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
 
 <header class="site">
   <div class="brand">
@@ -822,7 +783,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     currentCar = cars.find(c => c.id === id);
     if(!currentCar) return;
     const plazosDisponibles = Object.keys(currentCar.cuotas||{}).map(Number).sort((a,b)=>a-b);
-    currentPlazo = plazosDisponibles[0];
+    currentPlazo = plazosDisponibles[plazosDisponibles.length - 1];
 
     document.getElementById('modal-anio-km').textContent = `${currentCar.anio}`;
     document.getElementById('modal-title').textContent = `${currentCar.marca} ${currentCar.modelo}`;
@@ -886,7 +847,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     document.getElementById('overlay').classList.add('open');
 
-    // deja el link de este auto en la URL, para poder compartirlo tal cual
     const url = new URL(location.href);
     url.searchParams.set('auto', currentCar.id);
     history.replaceState(null, '', url);
@@ -903,7 +863,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       try{
         await navigator.share({ title: texto, text: texto, url: url.toString() });
       }catch(err){
-        // el usuario canceló el share, no hacemos nada
       }
       return;
     }
@@ -937,7 +896,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       btn.textContent = '¡Copiado!';
       setTimeout(()=>{ btn.textContent = original; }, 1500);
     }catch(err){
-      // si el navegador no permite copiar, no hacemos nada
     }
   };
 
@@ -1163,14 +1121,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   }
 
-  /**
-   * Cotización del dólar blue.
-   * Fuente: dolarapi.com — API pública y gratuita cuya fuente de datos
-   * para el dólar blue es, justamente, dolarhoy.com (no se puede leer
-   * dolarhoy.com directo desde el navegador por CORS, por eso se usa
-   * esta API intermedia que consulta esos mismos datos).
-   * Nuestro precio = precio de venta del blue + AJUSTE_DOLAR.
-   */
   const AJUSTE_DOLAR = 10;
 
   async function cargarCotizacionDolar(){
@@ -1190,7 +1140,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       document.getElementById('banner-dolar').style.display = 'block';
     }catch(err){
       console.warn('No se pudo cargar la cotización del dólar:', err.message);
-      // si falla, dejamos el cartel oculto en vez de mostrar un dato incorrecto
     }
   }
   setInterval(cargarCotizacionDolar, 10 * 60 * 1000);
