@@ -132,6 +132,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     font-family:'IBM Plex Mono'; font-size:12.5px; color:var(--alerta-rojo); font-weight:600;
     margin:-4px 0 12px;
   }
+  .senado-overlay{
+    position:absolute; inset:0; background:rgba(214,40,40,0.32); z-index:1;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .senado-badge{
+    background:var(--alerta-rojo); color:#fff;
+    font-family:'Archivo Black'; font-size:20px; letter-spacing:.06em;
+    padding:8px 22px; transform:rotate(-8deg);
+    border:2px solid #fff; box-shadow:0 6px 16px rgba(0,0,0,0.4);
+  }
+  .senado-badge-modal{
+    display:inline-block; background:var(--alerta-rojo); color:#fff;
+    font-family:'Archivo Black'; font-size:12px; padding:4px 10px; letter-spacing:.03em;
+    margin-bottom:8px;
+  }
   .banner-oferta{
     max-width:1180px; margin:28px auto 0; padding:0 28px;
   }
@@ -612,6 +627,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="modal-info">
         <span class="mono" id="modal-anio-km"></span>
         <h2 id="modal-title"></h2>
+        <span id="modal-senado-tag" class="senado-badge-modal" style="display:none;">🔒 SEÑADO</span>
         <span id="modal-oferta-tag" style="display:none; background:var(--alerta-rojo); color:#fff; font-family:'Archivo Black'; font-size:11px; padding:3px 8px; margin-bottom:6px; display:inline-block;">🔥 OFERTA</span>
         <div id="modal-oferta-countdown" class="oferta-countdown-modal" style="display:none;">⏳ Termina en --:--:--</div>
         <span id="modal-transferencia-tag" class="transferencia-tag" style="display:none; margin-bottom:8px;">🎁 Transferencia de regalo</span>
@@ -752,6 +768,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <span class="anio-badge">${c.anio}</span>
           ${c.ofertaActiva ? '<span class="oferta-badge">🔥 OFERTA</span>' : ''}
           <img src="${(c.fotos&&c.fotos[0])||''}" alt="${c.marca} ${c.modelo}" loading="lazy">
+          ${c.senado ? '<div class="senado-overlay"><span class="senado-badge">SEÑADO</span></div>' : ''}
         </div>
         <div class="body">
           <h3>${c.marca} ${c.modelo}</h3>
@@ -789,6 +806,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     document.getElementById('modal-title').textContent = `${currentCar.marca} ${currentCar.modelo}`;
     document.getElementById('modal-desc').textContent = currentCar.descripcion || '';
     document.getElementById('modal-transferencia-tag').style.display = currentCar.transferenciaRegalo ? 'inline-block' : 'none';
+    document.getElementById('modal-senado-tag').style.display = currentCar.senado ? 'inline-block' : 'none';
+    const reservarBtn = document.getElementById('reservar-btn');
+    if(currentCar.senado){
+      reservarBtn.disabled = true;
+      reservarBtn.textContent = '🔒 Este auto ya está señado';
+      reservarBtn.style.opacity = '0.55';
+      reservarBtn.style.cursor = 'default';
+    } else {
+      reservarBtn.disabled = false;
+      reservarBtn.textContent = '🔒 Reservar este auto';
+      reservarBtn.style.opacity = '';
+      reservarBtn.style.cursor = '';
+    }
     document.getElementById('modal-precio-efectivo').textContent = fmt.format(currentCar.precioEfectivo);
     const ofertaTag = document.getElementById('modal-oferta-tag');
     const precioAntesEl = document.getElementById('modal-precio-antes');
@@ -877,7 +907,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   };
 
   window.abrirReserva = function(){
-    if(!currentCar) return;
+    if(!currentCar || currentCar.senado) return;
     document.getElementById('reservar-auto-nombre').textContent = `${currentCar.marca} ${currentCar.modelo} ${currentCar.anio}`;
     document.getElementById('reservar-status').textContent = '';
     document.getElementById('overlay-reservar').classList.add('open');
