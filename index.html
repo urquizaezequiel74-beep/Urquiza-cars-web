@@ -1,3 +1,6 @@
+Ahora tengo todo el archivo completo. Acá va:
+
+```html
 <!DOCTYPE html>
 <html lang="es-AR">
 <head>
@@ -109,6 +112,27 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .ficha:hover{transform:translateY(-4px); box-shadow:0 16px 30px rgba(0,0,0,0.32);}
   .ficha .foto-wrap{position:relative; aspect-ratio:4/3; overflow:hidden; background:#0002;}
   .ficha .foto-wrap img{width:100%; height:100%; object-fit:cover; display:block;}
+  .ficha-nav-btn{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:3;
+    width:28px; height:28px; border-radius:50%; border:none;
+    background:rgba(13,13,13,0.55); color:#fff; font-size:14px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    opacity:0; transition:opacity .15s ease;
+  }
+  .ficha:hover .ficha-nav-btn{opacity:1;}
+  .ficha-nav-prev{left:8px;}
+  .ficha-nav-next{right:8px;}
+  .ficha-foto-dots{
+    position:absolute; bottom:8px; left:0; right:0; z-index:3;
+    display:flex; gap:4px; justify-content:center;
+  }
+  .ficha-foto-dots span{
+    width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,0.5);
+  }
+  .ficha-foto-dots span.active{background:#fff;}
+  @media(max-width:600px){
+    .ficha-nav-btn{opacity:1; width:24px; height:24px; font-size:12px;}
+  }
   .ficha .anio-badge{
     position:absolute; top:10px; left:10px; background:var(--asphalt); color:var(--paper);
     font-family:'IBM Plex Mono'; font-size:12px; padding:4px 8px; letter-spacing:.04em;
@@ -689,6 +713,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   const fmtKm = new Intl.NumberFormat('es-AR');
 
   let cars = [];
+  const fichaPhotoIndex = {};
 
   const SAMPLE_CARS = [
     {
@@ -762,13 +787,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     grid.innerHTML = carsOrdenados.map(c => {
       const plazosDisponibles = Object.keys(c.cuotas||{}).map(Number).sort((a,b)=>a-b);
       const cuotaMasBaja = plazosDisponibles.length ? c.cuotas[plazosDisponibles[plazosDisponibles.length-1]] : 0;
+      const fotos = c.fotos && c.fotos.length ? c.fotos : [''];
+      const idx = fichaPhotoIndex[c.id] || 0;
       return `
       <article class="ficha" data-id="${c.id}">
-        <div class="foto-wrap">
+        <div class="foto-wrap" data-fotos="${fotos.length}">
           <span class="anio-badge">${c.anio}</span>
           ${c.ofertaActiva ? '<span class="oferta-badge">🔥 OFERTA</span>' : ''}
-          <img src="${(c.fotos&&c.fotos[0])||''}" alt="${c.marca} ${c.modelo}" loading="lazy">
+          <img src="${fotos[idx]}" alt="${c.marca} ${c.modelo}" loading="lazy" data-ficha-img="${c.id}">
           ${c.senado ? '<div class="senado-overlay"><span class="senado-badge">SEÑADO</span></div>' : ''}
+          ${fotos.length > 1 ? `
+            <button type="button" class="ficha-nav-btn ficha-nav-prev" data-id="${c.id}" data-dir="-1">‹</button>
+            <button type="button" class="ficha-nav-btn ficha-nav-next" data-id="${c.id}" data-dir="1">›</button>
+            <div class="ficha-foto-dots" data-dots="${c.id}">
+              ${fotos.map((_,i)=>`<span class="${i===idx?'active':''}"></span>`).join('')}
+            </div>
+          ` : ''}
         </div>
         <div class="body">
           <h3>${c.marca} ${c.modelo}</h3>
@@ -790,7 +824,51 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     grid.querySelectorAll('.ficha').forEach(el=>{
       el.addEventListener('click', ()=> openModal(el.dataset.id));
     });
+
+    grid.querySelectorAll('.ficha-nav-btn').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        cambiarFotoFicha(btn.dataset.id, parseInt(btn.dataset.dir));
+      });
+    });
+
+    grid.querySelectorAll('.foto-wrap').forEach(wrap=>{
+      const id = wrap.closest('.ficha').dataset.id;
+      let touchStartX = 0;
+      let swiped = false;
+      wrap.addEventListener('touchstart', (e)=>{
+        touchStartX = e.touches[0].clientX;
+        swiped = false;
+      }, {passive:true});
+      wrap.addEventListener('touchmove', (e)=>{
+        const diff = e.touches[0].clientX - touchStartX;
+        if(Math.abs(diff) > 30) swiped = true;
+      }, {passive:true});
+      wrap.addEventListener('touchend', (e)=>{
+        const diff = e.changedTouches[0].clientX - touchStartX;
+        if(Math.abs(diff) > 40){
+          cambiarFotoFicha(id, diff < 0 ? 1 : -1);
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      });
+    });
+
     tickCountdown();
+  }
+
+  function cambiarFotoFicha(id, dir){
+    const car = cars.find(c => c.id === id);
+    if(!car || !car.fotos || car.fotos.length < 2) return;
+    const total = car.fotos.length;
+    const actual = fichaPhotoIndex[id] || 0;
+    const nuevo = (actual + dir + total) % total;
+    fichaPhotoIndex[id] = nuevo;
+    const img = document.querySelector(`img[data-ficha-img="${id}"]`);
+    if(img) img.src = car.fotos[nuevo];
+    document.querySelectorAll(`[data-dots="${id}"] span`).forEach((dot,i)=>{
+      dot.classList.toggle('active', i === nuevo);
+    });
   }
 
   let currentCar = null;
@@ -1181,3 +1259,4 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 </body>
 </html>
+```
