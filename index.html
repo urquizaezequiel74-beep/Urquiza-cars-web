@@ -1,5 +1,3 @@
-
-```html
 <!DOCTYPE html>
 <html lang="es-AR">
 <head>
@@ -255,6 +253,33 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     padding:6px 12px; font-family:'Archivo Black'; font-size:22px;
   }
   .stamp small{display:block; font-family:'IBM Plex Mono'; font-size:10px; letter-spacing:.1em; color:var(--stamp-red);}
+  .precio-principal{
+    background:var(--ink); color:var(--paper); padding:18px 20px; border-radius:6px;
+    margin-bottom:12px;
+  }
+  .precio-principal .label{
+    font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--dealer-yellow);
+    display:block; margin-bottom:4px; font-weight:600;
+  }
+  .precio-principal .antes{font-size:13px; color:rgba(244,241,232,0.55); text-decoration:line-through; display:none; margin-bottom:2px;}
+  .precio-principal .valor{font-family:'Archivo Black'; font-size:32px; display:block; line-height:1.1;}
+  .precio-lista-row{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    margin:0 0 14px; padding-bottom:14px; border-bottom:1px solid var(--line);
+  }
+  .precio-lista-row .info{font-size:12px; color:var(--ink-soft); line-height:1.5;}
+  .precio-lista-row .info b{color:var(--ink); font-weight:600;}
+  .precio-lista-row .valor-lista{
+    font-family:'IBM Plex Mono'; font-weight:700; font-size:15px; color:var(--ink); white-space:nowrap;
+  }
+  .ahorro-chip{
+    display:inline-block; background:rgba(214,40,40,0.1); color:var(--alerta-rojo);
+    font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; margin-top:4px;
+  }
+  .sin-financiacion-msg{
+    background:var(--paper-2); border:1px dashed var(--line); border-radius:4px;
+    padding:13px 15px; font-size:12.5px; color:var(--ink-soft); margin-bottom:16px; line-height:1.5;
+  }
   .precios-compare{display:flex; gap:22px; flex-wrap:wrap; margin:4px 0 14px; padding-bottom:16px; border-bottom:1px solid var(--line);}
   .precio-anticipo-unico{font-size:13px; color:var(--ink-soft); margin-bottom:20px;}
   .precio-anticipo-unico b{font-family:'IBM Plex Mono'; color:var(--ink); font-size:15px;}
@@ -656,31 +681,42 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span id="modal-transferencia-tag" class="transferencia-tag" style="display:none; margin-bottom:8px;">🎁 Transferencia de regalo</span>
         <p class="desc" id="modal-desc" style="font-size:14.5px; line-height:1.65; margin-bottom:22px; padding-bottom:18px; border-bottom:1px solid var(--line);"></p>
 
-        <div class="precios-compare">
-          <div>
-            <div id="modal-precio-antes" style="font-size:13px; color:var(--ink-soft); text-decoration:line-through; display:none;"></div>
-            <div class="stamp" id="stamp-efectivo"><small>Precio efectivo</small><span id="modal-precio-efectivo"></span></div>
-          </div>
-          <div>
-            <div class="stamp" style="border-color:var(--ink); color:var(--ink);"><small style="color:var(--ink);">Precio lista</small><span id="modal-precio-lista"></span></div>
-          </div>
+        <div class="precio-principal">
+          <span class="label">✅ Precio contado</span>
+          <div class="antes" id="modal-precio-antes"></div>
+          <span class="valor" id="modal-precio-efectivo"></span>
         </div>
-        <div class="precio-anticipo-unico">Anticipo: <b id="anticipo-valor-unico"></b></div>
+
+        <div class="precio-lista-row" id="precio-lista-row">
+          <div class="info">
+            💰 Precio de lista <b>si financiás en cuotas</b>
+            <div id="ahorro-chip-wrap"></div>
+          </div>
+          <span class="valor-lista" id="modal-precio-lista"></span>
+        </div>
+
+        <div class="precio-anticipo-unico" id="anticipo-wrap">Anticipo: <b id="anticipo-valor-unico"></b></div>
 
         <div class="cuotometro">
-          <div class="cuotometro-label"><span>Financiando a precio de lista</span></div>
+          <div id="financiacion-block">
+            <div class="cuotometro-label"><span>Financiando a precio de lista</span></div>
 
-          <div class="plazo-select" id="plazo-select"></div>
+            <div class="plazo-select" id="plazo-select"></div>
 
-          <div class="resultado">
-            <div>
-              <div class="cuota-label">Cuota fija</div>
-              <div class="cuota-num" id="cuota-monto">—</div>
+            <div class="resultado">
+              <div>
+                <div class="cuota-label">Cuota fija</div>
+                <div class="cuota-num" id="cuota-monto">—</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="cuota-label">Financiás</div>
+                <div class="mono" id="monto-financiado" style="font-size:15px;">—</div>
+              </div>
             </div>
-            <div style="text-align:right;">
-              <div class="cuota-label">Financiás</div>
-              <div class="mono" id="monto-financiado" style="font-size:15px;">—</div>
-            </div>
+          </div>
+
+          <div class="sin-financiacion-msg" id="sin-financiacion-msg" style="display:none;">
+            💵 Esta unidad se vende únicamente al contado — por su antigüedad no ofrecemos financiación en cuotas.
           </div>
 
           <a class="contact-cta" id="contact-cta" href="#" target="_blank" rel="noopener">Consultar por este auto</a>
@@ -785,9 +821,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     document.getElementById('banner-oferta').style.display = cars.some(c=>c.ofertaActiva) ? 'block' : 'none';
     grid.innerHTML = carsOrdenados.map(c => {
       const plazosDisponibles = Object.keys(c.cuotas||{}).map(Number).sort((a,b)=>a-b);
+      const sinFinanciacionCard = plazosDisponibles.length === 0;
       const cuotaMasBaja = plazosDisponibles.length ? c.cuotas[plazosDisponibles[plazosDisponibles.length-1]] : 0;
       const fotos = c.fotos && c.fotos.length ? c.fotos : [''];
       const idx = fichaPhotoIndex[c.id] || 0;
+      const hayDescuentoLista = !sinFinanciacionCard && c.precioLista && c.precioLista > c.precioEfectivo;
       return `
       <article class="ficha" data-id="${c.id}">
         <div class="foto-wrap" data-fotos="${fotos.length}">
@@ -805,16 +843,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         <div class="body">
           <h3>${c.marca} ${c.modelo}</h3>
-          <div class="specs">hasta ${plazosDisponibles[plazosDisponibles.length-1]||''} cuotas</div>
+          <div class="specs">${sinFinanciacionCard ? 'Solo contado' : 'hasta '+plazosDisponibles[plazosDisponibles.length-1]+' cuotas'}</div>
           ${c.transferenciaRegalo ? '<span class="transferencia-tag">🎁 Transferencia de regalo</span>' : ''}
           <div class="precio-row">
             <div>
               ${c.ofertaActiva ? `<span class="precio-antes">${fmt.format(c.precioAntesOferta)}</span>` : ''}
               <span class="precio${c.ofertaActiva ? ' precio-oferta' : ''}">${fmt.format(c.precioEfectivo)}</span>
-              <div style="font-size:10.5px;color:var(--ink-soft);margin-top:2px">contado · lista ${fmt.format(c.precioLista)}</div>
+              <div style="font-size:10.5px;color:var(--ink-soft);margin-top:2px">${hayDescuentoLista ? 'contado · lista '+fmt.format(c.precioLista) : 'precio contado'}</div>
               ${c.ofertaActiva ? `<span class="oferta-countdown" data-countdown-card>⏳ --:--:--</span>` : ''}
             </div>
-            <span class="cuota-hint">desde<br><b>${fmt.format(cuotaMasBaja)}</b>/mes</span>
+            <span class="cuota-hint">${sinFinanciacionCard ? 'sin financiación' : `desde<br><b>${fmt.format(cuotaMasBaja)}</b>/mes`}</span>
           </div>
         </div>
       </article>`;
@@ -877,7 +915,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     currentCar = cars.find(c => c.id === id);
     if(!currentCar) return;
     const plazosDisponibles = Object.keys(currentCar.cuotas||{}).map(Number).sort((a,b)=>a-b);
-    currentPlazo = plazosDisponibles[plazosDisponibles.length - 1];
+    const sinFinanciacion = plazosDisponibles.length === 0;
+    currentPlazo = sinFinanciacion ? null : plazosDisponibles[plazosDisponibles.length - 1];
 
     document.getElementById('modal-anio-km').textContent = `${currentCar.anio}`;
     document.getElementById('modal-title').textContent = `${currentCar.marca} ${currentCar.modelo}`;
@@ -905,20 +944,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       precioAntesEl.style.display = 'block';
       precioAntesEl.textContent = fmt.format(currentCar.precioAntesOferta);
       countdownEl.style.display = 'block';
-      document.getElementById('modal-precio-efectivo').style.color = 'var(--alerta-rojo)';
-      document.getElementById('stamp-efectivo').style.borderColor = 'var(--alerta-rojo)';
-      document.getElementById('stamp-efectivo').querySelector('small').style.color = 'var(--alerta-rojo)';
       tickCountdown();
     } else {
       ofertaTag.style.display = 'none';
       precioAntesEl.style.display = 'none';
       countdownEl.style.display = 'none';
-      document.getElementById('modal-precio-efectivo').style.color = '';
-      document.getElementById('stamp-efectivo').style.borderColor = '';
-      document.getElementById('stamp-efectivo').querySelector('small').style.color = '';
     }
-    document.getElementById('modal-precio-lista').textContent = fmt.format(currentCar.precioLista);
-    document.getElementById('anticipo-valor-unico').textContent = fmt.format(currentCar.anticipoLista || currentCar.anticipoEfectivo || 0);
+
+    // Precio de lista + chip de ahorro (solo si hay financiación y el precio de lista es mayor al contado)
+    const listaRow = document.getElementById('precio-lista-row');
+    const chipWrap = document.getElementById('ahorro-chip-wrap');
+    const anticipoWrap = document.getElementById('anticipo-wrap');
+    const ahorro = (currentCar.precioLista || 0) - (currentCar.precioEfectivo || 0);
+    if(sinFinanciacion || !currentCar.precioLista || ahorro <= 0){
+      listaRow.style.display = 'none';
+      anticipoWrap.style.display = 'none';
+    } else {
+      listaRow.style.display = 'flex';
+      anticipoWrap.style.display = 'block';
+      document.getElementById('modal-precio-lista').textContent = fmt.format(currentCar.precioLista);
+      chipWrap.innerHTML = `<span class="ahorro-chip">Ahorrás ${fmt.format(ahorro)} pagando contado</span>`;
+      document.getElementById('anticipo-valor-unico').textContent = fmt.format(currentCar.anticipoLista || currentCar.anticipoEfectivo || 0);
+    }
 
     const fotos = currentCar.fotos && currentCar.fotos.length ? currentCar.fotos : [''];
     document.getElementById('main-photo').src = fotos[0];
@@ -932,19 +979,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       });
     });
 
-    const plazoWrap = document.getElementById('plazo-select');
-    plazoWrap.innerHTML = plazosDisponibles.map(p =>
-      `<button class="plazo-btn ${p===currentPlazo?'active':''}" data-p="${p}">${p} cuotas</button>`).join('');
-    plazoWrap.querySelectorAll('.plazo-btn').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        currentPlazo = parseInt(btn.dataset.p);
-        plazoWrap.querySelectorAll('.plazo-btn').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        updateCuota();
+    const financiacionBlock = document.getElementById('financiacion-block');
+    const sinFinNote = document.getElementById('sin-financiacion-msg');
+    if(sinFinanciacion){
+      financiacionBlock.style.display = 'none';
+      sinFinNote.style.display = 'block';
+    } else {
+      financiacionBlock.style.display = 'block';
+      sinFinNote.style.display = 'none';
+      const plazoWrap = document.getElementById('plazo-select');
+      plazoWrap.innerHTML = plazosDisponibles.map(p =>
+        `<button class="plazo-btn ${p===currentPlazo?'active':''}" data-p="${p}">${p} cuotas</button>`).join('');
+      plazoWrap.querySelectorAll('.plazo-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          currentPlazo = parseInt(btn.dataset.p);
+          plazoWrap.querySelectorAll('.plazo-btn').forEach(b=>b.classList.remove('active'));
+          btn.classList.add('active');
+          updateCuota();
+        });
       });
-    });
-
-    updateCuota();
+      updateCuota();
+    }
 
     const cta = document.getElementById('contact-cta');
     cta.href = `https://wa.me/5491168849847?text=${encodeURIComponent('Hola! Te consulto por el '+currentCar.marca+' '+currentCar.modelo+' '+currentCar.anio)}`;
@@ -1057,6 +1112,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   };
 
   function updateCuota(){
+    if(currentPlazo===null){return;}
     const financiado = currentCar.montoFinanciar || 0;
     const cuota = (currentCar.cuotas && currentCar.cuotas[currentPlazo]) || 0;
 
@@ -1258,4 +1314,3 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 </body>
 </html>
-```
