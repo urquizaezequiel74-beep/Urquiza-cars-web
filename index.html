@@ -391,9 +391,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .form-submit-btn:disabled{opacity:.6; cursor:default;}
   .form-status{font-size:12.5px; color:var(--ink-soft); margin-top:10px; text-align:center;}
   .form-status.ok{color:#2b7a4b; font-weight:600;}
-  .ficha .precio-lista-mini{font-size:11px; color:var(--ink-soft); margin-top:1px;}
-  .ficha .precio-lista-mini b{color:var(--ink-soft); font-weight:600; text-decoration:line-through; opacity:.75;}
-  .ficha .precio-contado-label{font-size:9.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); margin-bottom:1px;}
+  .ficha .precio-lista-mini{font-size:13px; color:var(--ink-soft); margin-top:4px;}
+  .ficha .precio-lista-mini b{color:var(--ink); font-weight:700;}
+  .ficha .precio-contado-badge{
+    display:inline-block; background:var(--dealer-yellow); color:var(--asphalt);
+    font-family:'Archivo Black'; font-size:10px; letter-spacing:.05em;
+    padding:3px 8px; margin-bottom:6px;
+  }
 </style>
 </head>
 <body>
@@ -818,10 +822,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           ${c.transferenciaRegalo ? '<span class="transferencia-tag">🎁 Transferencia de regalo</span>' : ''}
           <div class="precio-row">
             <div>
-              <div class="precio-contado-label">Precio contado</div>
+              <div class="precio-contado-badge">💵 CONTADO</div>
               ${c.ofertaActiva ? `<span class="precio-antes">${fmt.format(c.precioAntesOferta)}</span>` : ''}
               <span class="precio${c.ofertaActiva ? ' precio-oferta' : ''}">${fmt.format(c.precioEfectivo)}</span>
-              ${hayDescuentoLista ? `<div class="precio-lista-mini">Lista: <b>${fmt.format(c.precioLista)}</b></div>` : ''}
+              ${hayDescuentoLista ? `<div class="precio-lista-mini">Precio lista: <b>${fmt.format(c.precioLista)}</b></div>` : ''}
               ${c.ofertaActiva ? `<span class="oferta-countdown" data-countdown-card>⏳ --:--:--</span>` : ''}
             </div>
             <span class="cuota-hint">${sinFinanciacionCard ? 'sin financiación' : `desde<br><b>${fmt.format(cuotaMasBaja)}</b>/mes`}</span>
