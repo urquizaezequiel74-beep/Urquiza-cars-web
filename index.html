@@ -253,25 +253,25 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     padding:6px 12px; font-family:'Archivo Black'; font-size:22px;
   }
   .stamp small{display:block; font-family:'IBM Plex Mono'; font-size:10px; letter-spacing:.1em; color:var(--stamp-red);}
-  .precio-principal{
-    background:var(--ink); color:var(--paper); padding:18px 20px; border-radius:6px;
-    margin-bottom:12px;
+  .precio-contado-stamp{
+    background:var(--dealer-yellow); color:var(--asphalt); padding:22px; border-radius:6px;
+    text-align:center; margin-bottom:20px; box-shadow:0 10px 24px rgba(242,183,5,0.3);
   }
-  .precio-principal .label{
-    font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--dealer-yellow);
-    display:block; margin-bottom:4px; font-weight:600;
+  .precio-contado-stamp .antes{
+    font-size:14px; text-decoration:line-through; opacity:.55; display:none; margin-bottom:4px;
   }
-  .precio-principal .antes{font-size:13px; color:rgba(244,241,232,0.55); text-decoration:line-through; display:none; margin-bottom:2px;}
-  .precio-principal .valor{font-family:'Archivo Black'; font-size:32px; display:block; line-height:1.1;}
-  .precio-lista-row{
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-    margin:0 0 14px; padding-bottom:14px; border-bottom:1px solid var(--line);
+  .precio-contado-stamp .label{
+    display:block; font-family:'Archivo Black'; font-size:13px; letter-spacing:.1em; margin-bottom:8px;
   }
-  .precio-lista-row .info{font-size:12px; color:var(--ink-soft); line-height:1.5;}
-  .precio-lista-row .info b{color:var(--ink); font-weight:600;}
-  .precio-lista-row .valor-lista{
-    font-family:'IBM Plex Mono'; font-weight:700; font-size:15px; color:var(--ink); white-space:nowrap;
+  .precio-contado-stamp .valor{
+    font-family:'Archivo Black'; font-size:40px; display:block; line-height:1;
   }
+  .precio-lista-info{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    background:var(--paper-2); border:1px solid var(--line); border-radius:4px;
+    padding:12px 15px; margin-bottom:16px; font-size:12.5px; color:var(--ink-soft);
+  }
+  .precio-lista-info b{font-family:'IBM Plex Mono'; color:var(--ink); font-size:15px; font-weight:700;}
   .ahorro-chip{
     display:inline-block; background:rgba(214,40,40,0.1); color:var(--alerta-rojo);
     font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; margin-top:4px;
@@ -681,24 +681,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span id="modal-transferencia-tag" class="transferencia-tag" style="display:none; margin-bottom:8px;">🎁 Transferencia de regalo</span>
         <p class="desc" id="modal-desc" style="font-size:14.5px; line-height:1.65; margin-bottom:22px; padding-bottom:18px; border-bottom:1px solid var(--line);"></p>
 
-        <div class="precio-principal">
-          <span class="label">✅ Precio contado</span>
+        <div class="precio-contado-stamp">
           <div class="antes" id="modal-precio-antes"></div>
+          <span class="label">💵 PRECIO CONTADO</span>
           <span class="valor" id="modal-precio-efectivo"></span>
         </div>
 
-        <div class="precio-lista-row" id="precio-lista-row">
-          <div class="info">
-            💰 Precio de lista <b>si financiás en cuotas</b>
-            <div id="ahorro-chip-wrap"></div>
-          </div>
-          <span class="valor-lista" id="modal-precio-lista"></span>
-        </div>
-
-        <div class="precio-anticipo-unico" id="anticipo-wrap">Anticipo: <b id="anticipo-valor-unico"></b></div>
-
         <div class="cuotometro">
           <div id="financiacion-block">
+            <div class="precio-lista-info" id="precio-lista-row">
+              <span>📋 Precio de lista <span style="opacity:.75">(base para financiar)</span>: <b id="modal-precio-lista"></b></span>
+              <span id="ahorro-chip-wrap"></span>
+            </div>
+            <div class="precio-anticipo-unico" id="anticipo-wrap">Anticipo: <b id="anticipo-valor-unico"></b></div>
             <div class="cuotometro-label"><span>Financiando a precio de lista</span></div>
 
             <div class="plazo-select" id="plazo-select"></div>
