@@ -253,33 +253,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     padding:6px 12px; font-family:'Archivo Black'; font-size:22px;
   }
   .stamp small{display:block; font-family:'IBM Plex Mono'; font-size:10px; letter-spacing:.1em; color:var(--stamp-red);}
-  .precio-contado-stamp{
-    background:var(--dealer-yellow); color:var(--asphalt); padding:22px; border-radius:6px;
-    text-align:center; margin-bottom:20px; box-shadow:0 10px 24px rgba(242,183,5,0.3);
-  }
-  .precio-contado-stamp .antes{
-    font-size:14px; text-decoration:line-through; opacity:.55; display:none; margin-bottom:4px;
-  }
-  .precio-contado-stamp .label{
-    display:block; font-family:'Archivo Black'; font-size:13px; letter-spacing:.1em; margin-bottom:8px;
-  }
-  .precio-contado-stamp .valor{
-    font-family:'Archivo Black'; font-size:40px; display:block; line-height:1;
-  }
-  .precio-lista-info{
-    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
-    background:var(--paper-2); border:1px solid var(--line); border-radius:4px;
-    padding:12px 15px; margin-bottom:16px; font-size:12.5px; color:var(--ink-soft);
-  }
-  .precio-lista-info b{font-family:'IBM Plex Mono'; color:var(--ink); font-size:15px; font-weight:700;}
-  .ahorro-chip{
-    display:inline-block; background:rgba(214,40,40,0.1); color:var(--alerta-rojo);
-    font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; margin-top:4px;
-  }
-  .sin-financiacion-msg{
-    background:var(--paper-2); border:1px dashed var(--line); border-radius:4px;
-    padding:13px 15px; font-size:12.5px; color:var(--ink-soft); margin-bottom:16px; line-height:1.5;
-  }
   .precios-compare{display:flex; gap:22px; flex-wrap:wrap; margin:4px 0 14px; padding-bottom:16px; border-bottom:1px solid var(--line);}
   .precio-anticipo-unico{font-size:13px; color:var(--ink-soft); margin-bottom:20px;}
   .precio-anticipo-unico b{font-family:'IBM Plex Mono'; color:var(--ink); font-size:15px;}
@@ -418,6 +391,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .form-submit-btn:disabled{opacity:.6; cursor:default;}
   .form-status{font-size:12.5px; color:var(--ink-soft); margin-top:10px; text-align:center;}
   .form-status.ok{color:#2b7a4b; font-weight:600;}
+  .ficha .precio-lista-mini{font-size:11px; color:var(--ink-soft); margin-top:1px;}
+  .ficha .precio-lista-mini b{color:var(--ink-soft); font-weight:600; text-decoration:line-through; opacity:.75;}
+  .ficha .precio-contado-label{font-size:9.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); margin-bottom:1px;}
 </style>
 </head>
 <body>
@@ -681,19 +657,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span id="modal-transferencia-tag" class="transferencia-tag" style="display:none; margin-bottom:8px;">🎁 Transferencia de regalo</span>
         <p class="desc" id="modal-desc" style="font-size:14.5px; line-height:1.65; margin-bottom:22px; padding-bottom:18px; border-bottom:1px solid var(--line);"></p>
 
-        <div class="precio-contado-stamp">
-          <div class="antes" id="modal-precio-antes"></div>
-          <span class="label">💵 PRECIO CONTADO</span>
-          <span class="valor" id="modal-precio-efectivo"></span>
+        <div class="precios-compare">
+          <div>
+            <div id="modal-precio-antes" style="font-size:13px; color:var(--ink-soft); text-decoration:line-through; display:none;"></div>
+            <div class="stamp" id="stamp-efectivo"><small>Precio efectivo</small><span id="modal-precio-efectivo"></span></div>
+          </div>
+          <div id="stamp-lista-wrap">
+            <div class="stamp" style="border-color:var(--ink); color:var(--ink);"><small style="color:var(--ink);">Precio lista</small><span id="modal-precio-lista"></span></div>
+          </div>
         </div>
+        <div class="precio-anticipo-unico" id="anticipo-wrap">Anticipo: <b id="anticipo-valor-unico"></b></div>
 
         <div class="cuotometro">
           <div id="financiacion-block">
-            <div class="precio-lista-info" id="precio-lista-row">
-              <span>📋 Precio de lista <span style="opacity:.75">(base para financiar)</span>: <b id="modal-precio-lista"></b></span>
-              <span id="ahorro-chip-wrap"></span>
-            </div>
-            <div class="precio-anticipo-unico" id="anticipo-wrap">Anticipo: <b id="anticipo-valor-unico"></b></div>
             <div class="cuotometro-label"><span>Financiando a precio de lista</span></div>
 
             <div class="plazo-select" id="plazo-select"></div>
@@ -710,7 +686,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
           </div>
 
-          <div class="sin-financiacion-msg" id="sin-financiacion-msg" style="display:none;">
+          <div id="sin-financiacion-msg" style="display:none;background:var(--paper-2);border:1px dashed var(--line);border-radius:4px;padding:13px 15px;font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;line-height:1.5;">
             💵 Esta unidad se vende únicamente al contado — por su antigüedad no ofrecemos financiación en cuotas.
           </div>
 
@@ -842,9 +818,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           ${c.transferenciaRegalo ? '<span class="transferencia-tag">🎁 Transferencia de regalo</span>' : ''}
           <div class="precio-row">
             <div>
+              <div class="precio-contado-label">Precio contado</div>
               ${c.ofertaActiva ? `<span class="precio-antes">${fmt.format(c.precioAntesOferta)}</span>` : ''}
               <span class="precio${c.ofertaActiva ? ' precio-oferta' : ''}">${fmt.format(c.precioEfectivo)}</span>
-              <div style="font-size:10.5px;color:var(--ink-soft);margin-top:2px">${hayDescuentoLista ? 'contado · lista '+fmt.format(c.precioLista) : 'precio contado'}</div>
+              ${hayDescuentoLista ? `<div class="precio-lista-mini">Lista: <b>${fmt.format(c.precioLista)}</b></div>` : ''}
               ${c.ofertaActiva ? `<span class="oferta-countdown" data-countdown-card>⏳ --:--:--</span>` : ''}
             </div>
             <span class="cuota-hint">${sinFinanciacionCard ? 'sin financiación' : `desde<br><b>${fmt.format(cuotaMasBaja)}</b>/mes`}</span>
@@ -939,26 +916,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       precioAntesEl.style.display = 'block';
       precioAntesEl.textContent = fmt.format(currentCar.precioAntesOferta);
       countdownEl.style.display = 'block';
+      document.getElementById('modal-precio-efectivo').style.color = 'var(--alerta-rojo)';
+      document.getElementById('stamp-efectivo').style.borderColor = 'var(--alerta-rojo)';
+      document.getElementById('stamp-efectivo').querySelector('small').style.color = 'var(--alerta-rojo)';
       tickCountdown();
     } else {
       ofertaTag.style.display = 'none';
       precioAntesEl.style.display = 'none';
       countdownEl.style.display = 'none';
+      document.getElementById('modal-precio-efectivo').style.color = '';
+      document.getElementById('stamp-efectivo').style.borderColor = '';
+      document.getElementById('stamp-efectivo').querySelector('small').style.color = '';
     }
 
-    // Precio de lista + chip de ahorro (solo si hay financiación y el precio de lista es mayor al contado)
-    const listaRow = document.getElementById('precio-lista-row');
-    const chipWrap = document.getElementById('ahorro-chip-wrap');
+    const stampListaWrap = document.getElementById('stamp-lista-wrap');
     const anticipoWrap = document.getElementById('anticipo-wrap');
-    const ahorro = (currentCar.precioLista || 0) - (currentCar.precioEfectivo || 0);
-    if(sinFinanciacion || !currentCar.precioLista || ahorro <= 0){
-      listaRow.style.display = 'none';
+    if(sinFinanciacion){
+      stampListaWrap.style.display = 'none';
       anticipoWrap.style.display = 'none';
     } else {
-      listaRow.style.display = 'flex';
+      stampListaWrap.style.display = 'block';
       anticipoWrap.style.display = 'block';
       document.getElementById('modal-precio-lista').textContent = fmt.format(currentCar.precioLista);
-      chipWrap.innerHTML = `<span class="ahorro-chip">Ahorrás ${fmt.format(ahorro)} pagando contado</span>`;
       document.getElementById('anticipo-valor-unico').textContent = fmt.format(currentCar.anticipoLista || currentCar.anticipoEfectivo || 0);
     }
 
