@@ -792,7 +792,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       grid.innerHTML = '<div class="empty-state">No hay autos publicados por el momento.</div>';
       return;
     }
-    const carsOrdenados = [...cars].sort((a,b) => (b.ofertaActiva?1:0) - (a.ofertaActiva?1:0));
+    const carsOrdenados = [...cars].sort((a,b) => {
+      const senadoA = a.senado ? 1 : 0;
+      const senadoB = b.senado ? 1 : 0;
+      if(senadoA !== senadoB) return senadoA - senadoB;
+      return (b.ofertaActiva?1:0) - (a.ofertaActiva?1:0);
+    });
     document.getElementById('banner-oferta').style.display = cars.some(c=>c.ofertaActiva) ? 'block' : 'none';
     grid.innerHTML = carsOrdenados.map(c => {
       const plazosDisponibles = Object.keys(c.cuotas||{}).map(Number).sort((a,b)=>a-b);
