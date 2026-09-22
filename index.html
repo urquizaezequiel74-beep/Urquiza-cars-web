@@ -805,7 +805,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const cuotaMasBaja = plazosDisponibles.length ? c.cuotas[plazosDisponibles[plazosDisponibles.length-1]] : 0;
       const fotos = c.fotos && c.fotos.length ? c.fotos : [''];
       const idx = fichaPhotoIndex[c.id] || 0;
-      const hayDescuentoLista = !sinFinanciacionCard && c.precioLista && c.precioLista > c.precioEfectivo;
+      const hayDescuentoLista = c.precioLista && c.precioLista > c.precioEfectivo;
       return `
       <article class="ficha" data-id="${c.id}">
         <div class="foto-wrap" data-fotos="${fotos.length}">
@@ -940,14 +940,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     const stampListaWrap = document.getElementById('stamp-lista-wrap');
     const anticipoWrap = document.getElementById('anticipo-wrap');
-    if(sinFinanciacion){
-      stampListaWrap.style.display = 'none';
-      anticipoWrap.style.display = 'none';
-    } else {
+    if(currentCar.precioLista){
       stampListaWrap.style.display = 'block';
       anticipoWrap.style.display = 'block';
       document.getElementById('modal-precio-lista').textContent = fmt.format(currentCar.precioLista);
       document.getElementById('anticipo-valor-unico').textContent = fmt.format(currentCar.anticipoLista || currentCar.anticipoEfectivo || 0);
+    } else {
+      stampListaWrap.style.display = 'none';
+      anticipoWrap.style.display = 'none';
     }
 
     const fotos = currentCar.fotos && currentCar.fotos.length ? currentCar.fotos : [''];
@@ -1093,15 +1093,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
     btn.disabled = false;
   };
-
-  function updateCuota(){
-    if(currentPlazo===null){return;}
-    const financiado = currentCar.montoFinanciar || 0;
-    const cuota = (currentCar.cuotas && currentCar.cuotas[currentPlazo]) || 0;
-
-    document.getElementById('cuota-monto').textContent = fmt.format(cuota);
-    document.getElementById('monto-financiado').textContent = fmt.format(financiado);
-  }
 
   function cerrarModalAuto(){
     document.getElementById('overlay').classList.remove('open');
@@ -1289,6 +1280,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   }
   setInterval(cargarCotizacionDolar, 10 * 60 * 1000);
+
+  function updateCuota(){
+    if(currentPlazo===null){return;}
+    const financiado = currentCar.montoFinanciar || 0;
+    const cuota = (currentCar.cuotas && currentCar.cuotas[currentPlazo]) || 0;
+
+    document.getElementById('cuota-monto').textContent = fmt.format(cuota);
+    document.getElementById('monto-financiado').textContent = fmt.format(financiado);
+  }
 </script>
 
 <a class="wa-float" href="https://wa.me/5491168849847" target="_blank" rel="noopener" aria-label="Escribinos por WhatsApp">
